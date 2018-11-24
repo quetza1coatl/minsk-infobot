@@ -1,9 +1,9 @@
-package com.quetzalcoatl.telebot.response.mock;
+package com.quetzalcoatl.telebot.handlers.mock;
 
-import com.quetzalcoatl.telebot.response.Response;
+import com.quetzalcoatl.telebot.handlers.Handler;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-public class MockResponseImpl implements Response {
+public class MockHandlerImpl implements Handler {
     @Override
     public boolean isSuitable(String text) {
         return text.equalsIgnoreCase("привет");
