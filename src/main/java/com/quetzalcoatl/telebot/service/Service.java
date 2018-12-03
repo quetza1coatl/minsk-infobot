@@ -120,12 +120,7 @@ public class Service {
         SendMessage message = new SendMessage();
         message.setChatId(chatID);
         message.setText(answer);
-        try {
-            controller.execute(message);
-        } catch (TelegramApiException e) {
-            log.error("Sending message failed", e);
-        }
-
+        sendMsg(message);
     }
 
     private void sendMsg(SendMessage message) {

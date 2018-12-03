@@ -1,24 +1,17 @@
 package com.quetzalcoatl.telebot.handlers;
 
-import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import static com.quetzalcoatl.telebot.HandlersTestData.*;
 
-public class StartHandlerImplTest {
-    private static Handler handler;
+
+public class StartHandlerImplTest extends AbstractHandlerTest{
+
     @BeforeClass
     public static void init(){
         handler = new StartHandlerImpl();
+        key = TEST_MESSAGE_START_KEY;
     }
 
-    @Test
-    public void isSuitableTest(){
-        Assert.assertTrue(handler.isSuitable("/start"));
-        Assert.assertTrue(handler.isSuitable("Старт"));
-        Assert.assertTrue(handler.isSuitable("старт"));
-        Assert.assertTrue(handler.isSuitable("СтарТ"));
-        Assert.assertFalse(handler.isSuitable("погода"));
 
-    }
-    //public boolean isSuitable(String text)
+
 }

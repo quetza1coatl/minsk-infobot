@@ -22,7 +22,7 @@ public class ExchangeRateHandlerImpl implements Handler {
     private static final Logger log = getLogger(ExchangeRateHandlerImpl.class);
     //TODO переместить их в константы?
     private static final String REGEX = "([А-Яа-я-ё\\.,\\?!]*[\\s]*)*курс[ыау]*(ом)*(ов)*(ами)* валют[ы]*\\b([А-Яа-я-ё\\.,]*[\\s]*)*[\\?\\.!]*";
-    private static final String SHORT_MESSAGE = "\\exchange";
+    private static final String SHORT_MESSAGE = "/exchange";
 
     private static final String URL_RATES = "http://www.nbrb.by/API/ExRates/Rates/";
     private static final String USD = URL_RATES + "145";
