@@ -27,21 +27,25 @@ public abstract class AbstractHandlerTest {
             String result = String.format("\n%-25s %-15s %7d", description.getTestClass().getSimpleName(), description.getMethodName(), TimeUnit.NANOSECONDS.toMillis(nanos));
             results.append(result);
             log.info(result + " ms\n");
-
         }
     };
 
-
     @Test
     public void testIsSuitable() throws Exception {
-        getTargetMessages(key).forEach(e -> assertTrue("getTargetMessages:: invalid element: '" + e + "'", handler.isSuitable(e)));
-        getAnotherMessages(key).forEach((s, strings) -> strings.forEach(e -> assertFalse("getAnotherMessages:: invalid element: '" + e + "'", handler.isSuitable(e))));
+        getTargetMessages(key).forEach(e -> assertTrue(
+                "getTargetMessages:: invalid element: '" + e + "'",
+                handler.isSuitable(e))
+        );
 
+        getAnotherMessages(key).forEach((s, strings) -> strings
+                .forEach(e -> assertFalse(
+                        "getAnotherMessages:: invalid element: '" + e + "'",
+                        handler.isSuitable(e))));
     }
 
     @Test
     public void testGetText() {
         //TODO
-
     }
+
 }

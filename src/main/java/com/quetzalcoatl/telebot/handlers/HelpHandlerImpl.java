@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class HelpHandlerImpl implements Handler {
     @Override
     public boolean isSuitable(String text) {
-        return (text.equals("/help") || text.equalsIgnoreCase("помощь"));
+        return text.equals("/help");
     }
 
     @Override

@@ -30,34 +30,10 @@ public class Controller extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
-
-        if (update.hasMessage() && update.getMessage().hasText()){
-           service.handleTextMessage(update);
-        }else if (update.hasCallbackQuery()){
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            service.handleTextMessage(update);
+        } else if (update.hasCallbackQuery()) {
             service.handleCallbackQuery(update);
         }
-
-
-
-
     }
-
-
-
-
-    //отправляет сообщение пользователю
-//    private void sendMsg(String answer, long chatID) {
-//        SendMessage message = new SendMessage();
-//        message.setChatId(chatID);
-//        message.setText(answer);
-//        try {
-//            execute(message);
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
-
 }

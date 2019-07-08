@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quetzalcoatl.telebot.handlers.Handler;
-import com.quetzalcoatl.telebot.util.Constants;
+import com.quetzalcoatl.telebot.util.InfoType;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -20,7 +20,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ExchangeRateHandlerImpl implements Handler {
     private static final Logger log = getLogger(ExchangeRateHandlerImpl.class);
-    //TODO переместить их в константы?
+
     private static final String REGEX = "([А-Яа-я-ё\\.,\\?!]*[\\s]*)*курс[ыау]*(ом)*(ов)*(ами)* валют[ы]*\\b([А-Яа-я-ё\\.,]*[\\s]*)*[\\?\\.!]*";
     private static final String SHORT_MESSAGE = "/exchange";
 
@@ -31,7 +31,7 @@ public class ExchangeRateHandlerImpl implements Handler {
 
     @Override
     public boolean isSuitable(String text) {
-        return text.equals(Constants.CALLBACK_DATA_EXCHANGE_RATES) || text.equals(SHORT_MESSAGE) || text.toLowerCase().matches(REGEX);
+        return text.equals(InfoType.EXCHANGE_RATES.value) || text.equals(SHORT_MESSAGE) || text.toLowerCase().matches(REGEX);
     }
 
     @Override
@@ -50,16 +50,12 @@ public class ExchangeRateHandlerImpl implements Handler {
             return null;
         }
 
-        StringBuilder builder = new StringBuilder()
-                .append("Курсы валют Нацбанка РБ \n[")
-                .append(rates.get(0).getFormattedDate())
-                .append("]\n")
-                .append(rates.stream()
-                        .map(r -> r.toString())
+        return "".concat("Курсы валют Нацбанка РБ \n[")
+                .concat(rates.get(0).getFormattedDate())
+                .concat("]\n")
+                .concat(rates.stream()
+                        .map(Rates::toString)
                         .collect(Collectors.joining("\n")));
-
-
-        return builder.toString();
     }
 
 
@@ -77,6 +73,7 @@ public class ExchangeRateHandlerImpl implements Handler {
     private static List<Rates> getRatesFromURLList(@NotNull List<URL> urls) {
         List<Rates> rates = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
+        //TODO stream?
         for (URL url : urls) {
             try {
                 Rates rate = mapper.readValue(url, Rates.class);

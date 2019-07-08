@@ -22,12 +22,6 @@ public class Main {
             log.info("Bot has been registered");
         } catch (TelegramApiRequestException e) {
             log.error("Bot registration failed", e);
-
-
         }
-
-
     }
-
-
 }

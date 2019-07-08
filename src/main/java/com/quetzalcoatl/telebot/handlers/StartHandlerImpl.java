@@ -2,11 +2,10 @@ package com.quetzalcoatl.telebot.handlers;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-
 public class StartHandlerImpl implements Handler {
     @Override
     public boolean isSuitable(String text) {
-        return text.equals("/start") || text.equalsIgnoreCase("старт");
+        return text.equals("/start");
     }
 
     @Override

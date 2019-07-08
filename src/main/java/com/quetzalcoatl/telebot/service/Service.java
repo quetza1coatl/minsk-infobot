@@ -2,7 +2,7 @@ package com.quetzalcoatl.telebot.service;
 
 import com.quetzalcoatl.telebot.contoller.Controller;
 import com.quetzalcoatl.telebot.handlers.Handler;
-import com.quetzalcoatl.telebot.util.Constants;
+import com.quetzalcoatl.telebot.util.InfoType;
 import com.quetzalcoatl.telebot.util.MainUtil;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,6 +19,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static java.lang.Math.toIntExact;
 
 public class Service {
+    public static final String SERVICE_ERROR_MESSAGE = "Сервис временно недоступен, попробуйте позже";
+    public static final String HINT_KEYS = "Вы можете выбрать доступный вариант "
+            + "или продолжить общение с ботом ^_^";
     private List<Handler> handlerList = MainUtil.getHandlerList();
     private static final Logger log = getLogger(Service.class);
     private final Controller controller;
@@ -27,31 +30,31 @@ public class Service {
         this.controller = controller;
     }
 
+
     //TODO: оптимизировать логику if-else (иная последовательность, что-то еще...)
     public void handleTextMessage(Update update) {
         String response = null;
         String userRequest = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
-        //находим хэндлер.
+        // fins handler
         Handler handler = findHandler(userRequest);
-        //Нету? Вызываем подсказку в виде инлайн-клавы.
+        // If can't find handler, create inline keyboard with available requests
         if (handler == null) {
             SendMessage message = getInlineKeyboardMessage(update.getMessage().getChatId());
             sendMsg(message);
 
-            //Есть хэндлер? двигаем дальше
+            // If handler has been found truing to get response
         } else {
             response = handler.getText(update);
             if (response == null) {
                 log.error("Unable to get data from {}", handler.getClass().getSimpleName());
-                sendMsg(Constants.SERVICE_ERROR_MESSAGE, chatId);
+                sendMsg(SERVICE_ERROR_MESSAGE, chatId);
 
             } else {
                 sendMsg(response, chatId);
             }
         }
     }
-
 
     public void handleCallbackQuery(Update update) {
         String response = null;
@@ -64,15 +67,14 @@ public class Service {
         // TODO: в данной точке, если не найден хэндлер (как такое возможно???)  -> служ.сообщение
         Handler handler = findHandler(callbackData);
         if (handler == null) {
-            log.error("Unable find handler to callbackQuery: {}", callbackData);
-            editMessageText.setText(Constants.SERVICE_ERROR_MESSAGE);
+            log.error("Unable to find handler to callbackQuery: {}", callbackData);
+            editMessageText.setText(SERVICE_ERROR_MESSAGE);
 
         } else {
-
             response = handler.getText(update);
             if (response == null) {
                 log.error("Unable to get data from {}", handler.getClass().getSimpleName());
-                editMessageText.setText(Constants.SERVICE_ERROR_MESSAGE);
+                editMessageText.setText(SERVICE_ERROR_MESSAGE);
 
             } else {
                 editMessageText.setText(response);
@@ -81,30 +83,39 @@ public class Service {
         sendMsg(editMessageText);
     }
 
-
     private SendMessage getInlineKeyboardMessage(long chatID) {
         SendMessage message = new SendMessage();
         message.setChatId(chatID);
-
-        message.setText(Constants.HINT_KEYS);
+        message.setText(HINT_KEYS);
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        //TODO: оптимизировать создание списков. immutable?
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline1 = new ArrayList<>();
-        //создаем первый ряд, добавляем в него кнопку (всего пока один ряд)
 
-        rowInline1.add(new InlineKeyboardButton().setText(Constants.INLINE_TEXT_WEATHER_FORECAST).setCallbackData(Constants.CALLBACK_DATA_WEATHER_FORECAST));
-        rowInline1.add(new InlineKeyboardButton().setText(Constants.INLINE_TEXT_MOVIE).setCallbackData(Constants.CALLBACK_DATA_MOVIE));
-        //добавляем второй ряд
+        // create first row, add two buttons
+        List<InlineKeyboardButton> rowInline1 = new ArrayList<>();
+        rowInline1.add(new InlineKeyboardButton()
+                .setText(InfoType.WEATHER_FORECAST.displayName)
+                .setCallbackData(InfoType.WEATHER_FORECAST.value));
+        rowInline1.add(new InlineKeyboardButton()
+                .setText(InfoType.MOVIE.displayName)
+                .setCallbackData(InfoType.MOVIE.value));
+
+        // create second row, add buttons
         List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
-        rowInline2.add(new InlineKeyboardButton().setText(Constants.INLINE_TEXT_EXCHANGE_RATES).setCallbackData(Constants.CALLBACK_DATA_EXCHANGE_RATES));
-        rowInline2.add(new InlineKeyboardButton().setText(Constants.INLINE_TEXT_NEWS).setCallbackData(Constants.CALLBACK_DATA_NEWS));
-        //добавляем наш ряд в массив рядов
+        rowInline2.add(new InlineKeyboardButton()
+                .setText(InfoType.EXCHANGE_RATES.displayName)
+                .setCallbackData(InfoType.EXCHANGE_RATES.value));
+        rowInline2.add(new InlineKeyboardButton()
+                .setText(InfoType.NEWS.displayName)
+                .setCallbackData(InfoType.NEWS.value));
+
+        // add rows to array
         rowsInline.add(rowInline1);
         rowsInline.add(rowInline2);
-        // Add it to the message
+
+        // Add array of rows to the message
         markupInline.setKeyboard(rowsInline);
         message.setReplyMarkup(markupInline);
+
         return message;
     }
 
@@ -113,10 +124,9 @@ public class Service {
                 .filter(r -> r.isSuitable(userRequest))
                 .findFirst()
                 .orElse(null);
-
     }
 
-        private void sendMsg(String answer, long chatID) {
+    private void sendMsg(String answer, long chatID) {
         SendMessage message = new SendMessage();
         message.setChatId(chatID);
         message.setText(answer);
@@ -129,7 +139,6 @@ public class Service {
         } catch (TelegramApiException e) {
             log.error("Sending message failed", e);
         }
-
     }
 
     private void sendMsg(EditMessageText message) {
@@ -138,8 +147,6 @@ public class Service {
         } catch (TelegramApiException e) {
             log.error("Sending message failed", e);
         }
-
     }
-
 
 }

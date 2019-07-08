@@ -20,7 +20,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public final class MainUtil {
     private static final Logger log = getLogger(MainUtil.class);
-    private MainUtil(){
+
+    private MainUtil() {
 
     }
 
@@ -31,15 +32,14 @@ public final class MainUtil {
             try {
                 properties.load(is);
             } catch (IOException e) {
-
                 log.error("Loading 'botCredentials.properties' failed", e);
             }
         }
         return properties;
-
     }
-//TODO где лучше хранить все имплементации??? В контроллере?
-    public static List<Handler> getHandlerList(){
+
+    //TODO где лучше хранить все имплементации??? В контроллере? см. паттерн Context?? Or pattern Factory
+    public static List<Handler> getHandlerList() {
         return Arrays.asList(
                 new StartHandlerImpl(),
                 new HelpHandlerImpl(),
@@ -50,5 +50,4 @@ public final class MainUtil {
                 new WeatherForecastHandlerImpl()
         );
     }
-
 }
