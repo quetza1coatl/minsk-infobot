@@ -11,6 +11,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class Main {
+
     private static final Logger log = getLogger(Service.class);
 
     public static void main(String[] args) {
@@ -24,4 +25,5 @@ public class Main {
             log.error("Bot registration failed", e);
         }
     }
+
 }

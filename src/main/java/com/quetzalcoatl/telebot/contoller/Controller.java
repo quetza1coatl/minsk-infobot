@@ -15,6 +15,7 @@ import static com.quetzalcoatl.telebot.util.MainUtil.getProperties;
  */
 
 public class Controller extends TelegramLongPollingBot {
+
     private Service service = new Service(this);
 
 
@@ -36,4 +37,5 @@ public class Controller extends TelegramLongPollingBot {
             service.handleCallbackQuery(update);
         }
     }
+
 }

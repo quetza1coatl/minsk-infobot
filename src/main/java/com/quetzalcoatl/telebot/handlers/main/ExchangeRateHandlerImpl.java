@@ -19,10 +19,14 @@ import java.util.stream.Collectors;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ExchangeRateHandlerImpl implements Handler {
+
     private static final Logger log = getLogger(ExchangeRateHandlerImpl.class);
 
-    private static final String REGEX = "([А-Яа-я-ё\\.,\\?!]*[\\s]*)*курс[ыау]*(ом)*(ов)*(ами)* валют[ы]*\\b([А-Яа-я-ё\\.,]*[\\s]*)*[\\?\\.!]*";
-    private static final String SHORT_MESSAGE = "/exchange";
+    private static final String REGEX = "([А-Яа-я-ё.,?!]*[\\s]*)*курс[ыау]*(ом)*(ов)*(ами)* валют[ы]*\\b([А-Яа-я-ё.,]*[\\s]*)*[?.!]*";
+    /**
+     * Command starting with '/' symbol and can be registered by BotFarther in list of commands
+     */
+    private static final String COMMAND_MESSAGE = "/exchangerates";
 
     private static final String URL_RATES = "http://www.nbrb.by/API/ExRates/Rates/";
     private static final String USD = URL_RATES + "145";
@@ -31,7 +35,7 @@ public class ExchangeRateHandlerImpl implements Handler {
 
     @Override
     public boolean isSuitable(String text) {
-        return text.equals(InfoType.EXCHANGE_RATES.value) || text.equals(SHORT_MESSAGE) || text.toLowerCase().matches(REGEX);
+        return text.equals(InfoType.EXCHANGE_RATES.value) || text.equals(COMMAND_MESSAGE) || text.toLowerCase().matches(REGEX);
     }
 
     @Override
@@ -39,14 +43,14 @@ public class ExchangeRateHandlerImpl implements Handler {
         List<URL> urls = getURLList();
 
         if (urls.isEmpty()) {
-            log.error("return null because URL list is empty");
+            log.error("returns null because URL list is empty");
             return null;
         }
 
         List<Rates> rates = getRatesFromURLList(urls);
 
         if (rates.isEmpty()) {
-            log.error("return null because Rates list is empty");
+            log.error("returns null because Rates list is empty");
             return null;
         }
 
@@ -65,7 +69,7 @@ public class ExchangeRateHandlerImpl implements Handler {
             urls = Arrays.asList(new URL(USD), new URL(EURO), new URL(RUB));
         } catch (MalformedURLException e) {
             log.error("Can't get URL", e);
-            return Collections.EMPTY_LIST;
+            return new ArrayList<>();
         }
         return urls;
     }
@@ -81,7 +85,7 @@ public class ExchangeRateHandlerImpl implements Handler {
 
             } catch (IOException e) {
                 log.error("Can't parse date", e);
-                return Collections.EMPTY_LIST;
+                return new ArrayList<>();
             }
         }
 
@@ -90,8 +94,9 @@ public class ExchangeRateHandlerImpl implements Handler {
 
     @JsonAutoDetect
     private static class Rates {
-        public Rates() {
-        }
+
+        public Rates() {}
+
 
         @JsonProperty("Cur_ID")
         public String id;
@@ -114,7 +119,7 @@ public class ExchangeRateHandlerImpl implements Handler {
         public String toString() {
             return String.format("%d %s = %.4f BYN", this.scale, this.name, this.rate);
         }
-    }
 
+    }
 
 }

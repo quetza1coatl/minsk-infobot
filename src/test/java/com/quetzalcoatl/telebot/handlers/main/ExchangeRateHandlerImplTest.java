@@ -12,4 +12,5 @@ public class ExchangeRateHandlerImplTest extends AbstractHandlerTest {
         handler = new ExchangeRateHandlerImpl();
         key = TEST_MESSAGE_EXCHANGE_RATE_KEY;
     }
+
 }

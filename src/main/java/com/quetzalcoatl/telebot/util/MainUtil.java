@@ -19,11 +19,11 @@ import java.util.Properties;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public final class MainUtil {
+
     private static final Logger log = getLogger(MainUtil.class);
 
-    private MainUtil() {
+    private MainUtil() {}
 
-    }
 
     public static Properties getProperties() {
         Properties properties = new Properties();
@@ -39,6 +39,11 @@ public final class MainUtil {
     }
 
     //TODO где лучше хранить все имплементации??? В контроллере? см. паттерн Context?? Or pattern Factory
+
+    /**
+     * In case of adding new "/"-commands they SHOULD  be provided to the BotFather (/setcommands)
+     * These commands are called COMMAND_MESSAGE in the appropriate handler.
+     */
     public static List<Handler> getHandlerList() {
         return Arrays.asList(
                 new StartHandlerImpl(),
@@ -50,4 +55,5 @@ public final class MainUtil {
                 new WeatherForecastHandlerImpl()
         );
     }
+
 }

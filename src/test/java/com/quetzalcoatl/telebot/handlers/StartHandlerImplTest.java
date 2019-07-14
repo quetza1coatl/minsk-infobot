@@ -10,4 +10,5 @@ public class StartHandlerImplTest extends AbstractHandlerTest{
         handler = new StartHandlerImpl();
         key = TEST_MESSAGE_START_KEY;
     }
+
 }

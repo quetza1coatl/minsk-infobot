@@ -1,19 +1,24 @@
 package com.quetzalcoatl.telebot.handlers.main;
 
 import com.quetzalcoatl.telebot.handlers.Handler;
-import com.quetzalcoatl.telebot.util.InfoType;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 //TODO STUB
 public class WeatherForecastHandlerImpl implements Handler {
 
+    /**
+     * Command starting with '/' symbol and can be registered by BotFarther in list of commands
+     */
+    private static final String COMMAND_MESSAGE ="/weatherforecast";
+
     @Override
     public boolean isSuitable(String text) {
-        return text.equals(InfoType.WEATHER_FORECAST.value);
+        return text.equals(COMMAND_MESSAGE);
     }
 
     @Override
     public String getText(Update update) {
         return "STUB ^^ Погода будет прекрасной";
     }
+
 }

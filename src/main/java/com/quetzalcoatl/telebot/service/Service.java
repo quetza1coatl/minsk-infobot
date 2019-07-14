@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 import static java.lang.Math.toIntExact;
 
 public class Service {
-    public static final String SERVICE_ERROR_MESSAGE = "Сервис временно недоступен, попробуйте позже";
-    public static final String HINT_KEYS = "Вы можете выбрать доступный вариант "
+
+    private static final String SERVICE_ERROR_MESSAGE = "Сервис временно недоступен, попробуйте позже";
+    private static final String HINT_KEYS = "Вы можете выбрать доступный вариант "
             + "или продолжить общение с ботом ^_^";
     private List<Handler> handlerList = MainUtil.getHandlerList();
     private static final Logger log = getLogger(Service.class);

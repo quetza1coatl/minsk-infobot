@@ -1,6 +1,7 @@
 package com.quetzalcoatl.telebot.util;
 
 public enum InfoType {
+
     MOVIE("movie", "киноафиша"),
     WEATHER_FORECAST("weather forecast", "прогноз погоды"),
     EXCHANGE_RATES("exchange rates", "курсы валют"),
@@ -13,4 +14,5 @@ public enum InfoType {
         this.value = value;
         this.displayName = displayName;
     }
+
 }

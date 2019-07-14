@@ -10,8 +10,9 @@ public interface Handler {
      */
     boolean isSuitable(String text);
 
-    /**@return answer from the parser (or generator) or null if it can't do this
+    /**
+     * @return answer from the parser (or generator) or null if it can't do this
      */
-
     String getText(Update update);
+
 }

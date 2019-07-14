@@ -3,6 +3,7 @@ package com.quetzalcoatl.telebot.handlers;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class StartHandlerImpl implements Handler {
+
     @Override
     public boolean isSuitable(String text) {
         return text.equals("/start");
@@ -16,4 +17,5 @@ public class StartHandlerImpl implements Handler {
                 "/help - описание доступных функций и способов взаимодействия\n"
                 + "Да прибудет с тобой сила, %s!", username);
     }
+
 }

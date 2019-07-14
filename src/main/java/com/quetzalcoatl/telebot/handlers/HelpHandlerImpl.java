@@ -3,6 +3,7 @@ package com.quetzalcoatl.telebot.handlers;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class HelpHandlerImpl implements Handler {
+
     @Override
     public boolean isSuitable(String text) {
         return text.equals("/help");
@@ -14,4 +15,5 @@ public class HelpHandlerImpl implements Handler {
         String message = "help_menu";
         return message;
     }
+
 }
