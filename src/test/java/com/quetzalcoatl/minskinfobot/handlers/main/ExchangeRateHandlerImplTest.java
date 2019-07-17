@@ -1,9 +1,9 @@
-package com.quetzalcoatl.telebot.handlers.main;
+package com.quetzalcoatl.minskinfobot.handlers.main;
 
 
-import com.quetzalcoatl.telebot.handlers.AbstractHandlerTest;
+import com.quetzalcoatl.minskinfobot.handlers.AbstractHandlerTest;
 import org.junit.BeforeClass;
-import static com.quetzalcoatl.telebot.HandlersTestData.*;
+import static com.quetzalcoatl.minskinfobot.HandlersTestData.*;
 
 public class ExchangeRateHandlerImplTest extends AbstractHandlerTest {
 

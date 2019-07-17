@@ -1,6 +1,6 @@
-package com.quetzalcoatl.telebot.handlers.mock;
+package com.quetzalcoatl.minskinfobot.handlers.mock;
 
-import com.quetzalcoatl.telebot.handlers.Handler;
+import com.quetzalcoatl.minskinfobot.handlers.Handler;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class MockHandlerImpl implements Handler {

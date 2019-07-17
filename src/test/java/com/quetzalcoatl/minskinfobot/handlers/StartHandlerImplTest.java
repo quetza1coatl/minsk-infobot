@@ -1,7 +1,7 @@
-package com.quetzalcoatl.telebot.handlers;
+package com.quetzalcoatl.minskinfobot.handlers;
 
 import org.junit.BeforeClass;
-import static com.quetzalcoatl.telebot.HandlersTestData.*;
+import static com.quetzalcoatl.minskinfobot.HandlersTestData.*;
 
 public class StartHandlerImplTest extends AbstractHandlerTest{
 

@@ -1,4 +1,4 @@
-package com.quetzalcoatl.telebot.util;
+package com.quetzalcoatl.minskinfobot.util;
 
 public enum InfoType {
 

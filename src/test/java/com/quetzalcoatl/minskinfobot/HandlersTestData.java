@@ -1,6 +1,6 @@
-package com.quetzalcoatl.telebot;
+package com.quetzalcoatl.minskinfobot;
 
-import com.quetzalcoatl.telebot.util.InfoType;
+import com.quetzalcoatl.minskinfobot.util.InfoType;
 
 import java.util.*;
 

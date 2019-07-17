@@ -1,4 +1,4 @@
-package com.quetzalcoatl.telebot.handlers;
+package com.quetzalcoatl.minskinfobot.handlers;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.quetzalcoatl.telebot.HandlersTestData.getAnotherMessages;
-import static com.quetzalcoatl.telebot.HandlersTestData.getTargetMessages;
+import static com.quetzalcoatl.minskinfobot.HandlersTestData.getAnotherMessages;
+import static com.quetzalcoatl.minskinfobot.HandlersTestData.getTargetMessages;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;

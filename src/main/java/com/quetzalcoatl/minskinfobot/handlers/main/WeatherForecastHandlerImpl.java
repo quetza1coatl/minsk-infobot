@@ -1,15 +1,15 @@
-package com.quetzalcoatl.telebot.handlers.main;
+package com.quetzalcoatl.minskinfobot.handlers.main;
 
-import com.quetzalcoatl.telebot.handlers.Handler;
+import com.quetzalcoatl.minskinfobot.handlers.Handler;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 //TODO STUB
-public class NewsHandlerImpl implements Handler {
+public class WeatherForecastHandlerImpl implements Handler {
 
     /**
      * Command starting with '/' symbol and can be registered by BotFarther in list of commands
      */
-    private static final String COMMAND_MESSAGE ="/news";
+    private static final String COMMAND_MESSAGE ="/weatherforecast";
 
     @Override
     public boolean isSuitable(String text) {
@@ -18,7 +18,7 @@ public class NewsHandlerImpl implements Handler {
 
     @Override
     public String getText(Update update) {
-        return "STUB ^^ Новости наиприятнейшие, с какой начать?";
+        return "STUB ^^ Погода будет прекрасной";
     }
 
 }

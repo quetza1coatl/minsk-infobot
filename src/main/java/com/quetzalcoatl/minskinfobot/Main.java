@@ -1,7 +1,7 @@
-package com.quetzalcoatl.telebot;
+package com.quetzalcoatl.minskinfobot;
 
-import com.quetzalcoatl.telebot.contoller.Controller;
-import com.quetzalcoatl.telebot.service.Service;
+import com.quetzalcoatl.minskinfobot.contoller.Controller;
+import com.quetzalcoatl.minskinfobot.service.Service;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;

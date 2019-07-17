@@ -1,9 +1,9 @@
-package com.quetzalcoatl.telebot.service;
+package com.quetzalcoatl.minskinfobot.service;
 
-import com.quetzalcoatl.telebot.contoller.Controller;
-import com.quetzalcoatl.telebot.handlers.Handler;
-import com.quetzalcoatl.telebot.util.InfoType;
-import com.quetzalcoatl.telebot.util.MainUtil;
+import com.quetzalcoatl.minskinfobot.contoller.Controller;
+import com.quetzalcoatl.minskinfobot.handlers.Handler;
+import com.quetzalcoatl.minskinfobot.util.InfoType;
+import com.quetzalcoatl.minskinfobot.util.MainUtil;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;

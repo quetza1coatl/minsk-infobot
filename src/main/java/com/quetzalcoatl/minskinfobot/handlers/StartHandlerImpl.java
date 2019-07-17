@@ -1,4 +1,4 @@
-package com.quetzalcoatl.telebot.handlers;
+package com.quetzalcoatl.minskinfobot.handlers;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 

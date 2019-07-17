@@ -20,7 +20,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.quetzalcoatl.telebot" level="debug"/>
+    <logger name="com.quetzalcoatl.minskinfobot" level="debug"/>
 
     <root level="info">
         <appender-ref ref="file"/>

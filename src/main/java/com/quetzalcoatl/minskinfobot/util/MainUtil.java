@@ -1,12 +1,12 @@
-package com.quetzalcoatl.telebot.util;
+package com.quetzalcoatl.minskinfobot.util;
 
-import com.quetzalcoatl.telebot.handlers.*;
-import com.quetzalcoatl.telebot.handlers.Handler;
-import com.quetzalcoatl.telebot.handlers.main.ExchangeRateHandlerImpl;
-import com.quetzalcoatl.telebot.handlers.main.MovieHandlerImpl;
-import com.quetzalcoatl.telebot.handlers.main.NewsHandlerImpl;
-import com.quetzalcoatl.telebot.handlers.main.WeatherForecastHandlerImpl;
-import com.quetzalcoatl.telebot.handlers.mock.MockHandlerImpl;
+import com.quetzalcoatl.minskinfobot.handlers.*;
+import com.quetzalcoatl.minskinfobot.handlers.Handler;
+import com.quetzalcoatl.minskinfobot.handlers.main.ExchangeRateHandlerImpl;
+import com.quetzalcoatl.minskinfobot.handlers.main.MovieHandlerImpl;
+import com.quetzalcoatl.minskinfobot.handlers.main.NewsHandlerImpl;
+import com.quetzalcoatl.minskinfobot.handlers.main.WeatherForecastHandlerImpl;
+import com.quetzalcoatl.minskinfobot.handlers.mock.MockHandlerImpl;
 import org.slf4j.Logger;
 
 
@@ -26,6 +26,7 @@ public final class MainUtil {
 
 
     public static Properties getProperties() {
+        //TODO Config Vars for Heroku -> >${name, token}
         Properties properties = new Properties();
         InputStream is = MainUtil.class.getClassLoader().getResourceAsStream("botCredentials.properties");
         if (is != null) {

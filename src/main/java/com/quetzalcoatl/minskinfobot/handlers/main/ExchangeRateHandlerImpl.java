@@ -1,10 +1,10 @@
-package com.quetzalcoatl.telebot.handlers.main;
+package com.quetzalcoatl.minskinfobot.handlers.main;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.quetzalcoatl.telebot.handlers.Handler;
-import com.quetzalcoatl.telebot.util.InfoType;
+import com.quetzalcoatl.minskinfobot.handlers.Handler;
+import com.quetzalcoatl.minskinfobot.util.InfoType;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.objects.Update;
 

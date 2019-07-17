@@ -1,11 +1,11 @@
-package com.quetzalcoatl.telebot.contoller;
+package com.quetzalcoatl.minskinfobot.contoller;
 
-import com.quetzalcoatl.telebot.service.Service;
+import com.quetzalcoatl.minskinfobot.service.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 
-import static com.quetzalcoatl.telebot.util.MainUtil.getProperties;
+import static com.quetzalcoatl.minskinfobot.util.MainUtil.getProperties;
 
 
 /**
