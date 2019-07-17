@@ -2,18 +2,11 @@ package com.quetzalcoatl.minskinfobot.handlers;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.slf4j.Logger;
-
 import java.util.concurrent.TimeUnit;
-
-import static com.quetzalcoatl.minskinfobot.HandlersTestData.getAnotherMessages;
-import static com.quetzalcoatl.minskinfobot.HandlersTestData.getTargetMessages;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public abstract class AbstractHandlerTest {
@@ -48,23 +41,5 @@ public abstract class AbstractHandlerTest {
                     "-----------------------------------------------------------------------------\n");
         }
     };
-
-    @Test
-    public void testIsSuitable() throws Exception {
-        getTargetMessages(key).forEach(e -> assertTrue(
-                "getTargetMessages:: invalid element: '" + e + "'",
-                handler.isSuitable(e))
-        );
-
-        getAnotherMessages(key).forEach((s, strings) -> strings
-                .forEach(e -> assertFalse(
-                        "getAnotherMessages:: invalid element: '" + e + "'",
-                        handler.isSuitable(e))));
-    }
-
-    @Test
-    public void testGetText() {
-        //TODO
-    }
 
 }

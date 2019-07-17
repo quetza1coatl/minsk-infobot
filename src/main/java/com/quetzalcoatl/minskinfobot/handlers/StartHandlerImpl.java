@@ -5,11 +5,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class StartHandlerImpl implements Handler {
 
     @Override
-    public boolean isSuitable(String text) {
-        return text.equals("/start");
-    }
-
-    @Override
     public String getText(Update update) {
         String username = update.getMessage().getFrom().getFirstName();
         username = username != null ? username : "unknown person";

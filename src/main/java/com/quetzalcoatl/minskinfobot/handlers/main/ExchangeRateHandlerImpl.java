@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quetzalcoatl.minskinfobot.handlers.Handler;
-import com.quetzalcoatl.minskinfobot.util.InfoType;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -22,21 +21,10 @@ public class ExchangeRateHandlerImpl implements Handler {
 
     private static final Logger log = getLogger(ExchangeRateHandlerImpl.class);
 
-    private static final String REGEX = "([А-Яа-я-ё.,?!]*[\\s]*)*курс[ыау]*(ом)*(ов)*(ами)* валют[ы]*\\b([А-Яа-я-ё.,]*[\\s]*)*[?.!]*";
-    /**
-     * Command starting with '/' symbol and can be registered by BotFarther in list of commands
-     */
-    private static final String COMMAND_MESSAGE = "/exchangerates";
-
     private static final String URL_RATES = "http://www.nbrb.by/API/ExRates/Rates/";
     private static final String USD = URL_RATES + "145";
     private static final String EURO = URL_RATES + "292";
     private static final String RUB = URL_RATES + "298";
-
-    @Override
-    public boolean isSuitable(String text) {
-        return text.equals(InfoType.EXCHANGE_RATES.value) || text.equals(COMMAND_MESSAGE) || text.toLowerCase().matches(REGEX);
-    }
 
     @Override
     public String getText(Update update) {
@@ -77,12 +65,11 @@ public class ExchangeRateHandlerImpl implements Handler {
     private static List<Rates> getRatesFromURLList(@NotNull List<URL> urls) {
         List<Rates> rates = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
-        //TODO stream?
+
         for (URL url : urls) {
             try {
                 Rates rate = mapper.readValue(url, Rates.class);
                 rates.add(rate);
-
             } catch (IOException e) {
                 log.error("Can't parse date", e);
                 return new ArrayList<>();
