@@ -4,8 +4,6 @@ import com.quetzalcoatl.minskinfobot.service.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static com.quetzalcoatl.minskinfobot.util.MainUtil.getProperties;
-
 /**
  * Поставляет имя и токен бота.
  * Слушает запросы пользователя и в зависимости от их типа маппит их на соответствующий метод сервиса.
@@ -18,14 +16,10 @@ public class MinskInfoBot extends TelegramLongPollingBot {
 
 
     @Override
-    public String getBotUsername() {
-        return getProperties().getProperty("BotUserName");
-    }
+    public String getBotUsername() { return System.getenv("BotUserName"); }
 
     @Override
-    public String getBotToken() {
-        return getProperties().getProperty("BotToken");
-    }
+    public String getBotToken() { return System.getenv("BotToken"); }
 
     @Override
     public void onUpdateReceived(Update update) {

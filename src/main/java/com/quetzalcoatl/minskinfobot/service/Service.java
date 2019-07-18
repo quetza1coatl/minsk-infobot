@@ -1,14 +1,8 @@
 package com.quetzalcoatl.minskinfobot.service;
 
 import com.quetzalcoatl.minskinfobot.MinskInfoBot;
-import com.quetzalcoatl.minskinfobot.handlers.Handler;
-import com.quetzalcoatl.minskinfobot.handlers.HelpHandlerImpl;
-import com.quetzalcoatl.minskinfobot.handlers.StartHandlerImpl;
-import com.quetzalcoatl.minskinfobot.handlers.main.ExchangeRateHandlerImpl;
-import com.quetzalcoatl.minskinfobot.handlers.main.MovieHandlerImpl;
-import com.quetzalcoatl.minskinfobot.handlers.main.NewsHandlerImpl;
-import com.quetzalcoatl.minskinfobot.handlers.main.WeatherForecastHandlerImpl;
-import com.quetzalcoatl.minskinfobot.util.InfoType;
+import com.quetzalcoatl.minskinfobot.handlers.*;
+import com.quetzalcoatl.minskinfobot.handlers.main.*;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,7 +10,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +19,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Service {
 
     private static final String SERVICE_ERROR_MESSAGE = "Сервис временно недоступен, попробуйте позже";
+    private static final String START = "/start";
+    private static final String HELP = "/help";
+    private static final String EXCHANGE_RATES = "курсы валют";
+    private static final String WEATHER_FORECAST = "прогноз погоды";
+    private static final String MOVIE = "киноафиша";
+    private static final String NEWS = "новости";
+
+
     private static final Logger log = getLogger(Service.class);
     private final MinskInfoBot minskInfoBot;
 
@@ -39,24 +40,24 @@ public class Service {
         String userRequest = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
         Handler handler;
-        //TODO try to use Enum!!!
+
         switch (userRequest) {
-            case ("/start"):
+            case (START):
                 handler = new StartHandlerImpl();
                 break;
-            case ("/help"):
+            case (HELP):
                 handler = new HelpHandlerImpl();
                 break;
-            case ("курсы валют"):
+            case (EXCHANGE_RATES):
                 handler = new ExchangeRateHandlerImpl();
                 break;
-            case ("прогноз погоды"):
+            case (WEATHER_FORECAST):
                 handler = new WeatherForecastHandlerImpl();
                 break;
-            case ("киноафиша"):
+            case (MOVIE):
                 handler = new MovieHandlerImpl();
                 break;
-            case ("новости"):
+            case (NEWS):
                 handler = new NewsHandlerImpl();
                 break;
             default:
@@ -70,7 +71,6 @@ public class Service {
         } else {
             sendMsg(response, chatId);
         }
-
     }
 
     private void getReplyKeyboardMarkup(SendMessage message) {
@@ -86,13 +86,13 @@ public class Service {
 
         // create first row, add two buttons
         KeyboardRow firstRow = new KeyboardRow();
-        firstRow.add(new KeyboardButton(InfoType.EXCHANGE_RATES.displayName));
-        firstRow.add(new KeyboardButton(InfoType.WEATHER_FORECAST.displayName));
+        firstRow.add(new KeyboardButton(EXCHANGE_RATES));
+        firstRow.add(new KeyboardButton(WEATHER_FORECAST));
 
         // create second row, add two buttons
         KeyboardRow secondRow = new KeyboardRow();
-        secondRow.add(new KeyboardButton(InfoType.MOVIE.displayName));
-        secondRow.add(new KeyboardButton(InfoType.NEWS.displayName));
+        secondRow.add(new KeyboardButton(MOVIE));
+        secondRow.add(new KeyboardButton(NEWS));
 
         rowList.add(firstRow);
         rowList.add(secondRow);
