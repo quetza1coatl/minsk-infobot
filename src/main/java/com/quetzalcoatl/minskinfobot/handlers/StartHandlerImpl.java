@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class StartHandlerImpl implements Handler {
 
     @Override
-    public String getText(Update update) {
+    public final String getText(Update update) {
         String username = update.getMessage().getFrom().getFirstName();
         username = username != null ? username : "unknown person";
         return String.format("Привет человекам!!! Я пришёл с миром :)\n" +

@@ -27,7 +27,7 @@ public class ExchangeRateHandlerImpl implements Handler {
     private static final String RUB = URL_RATES + "298";
 
     @Override
-    public String getText(Update update) {
+    public final String getText(Update update) {
         List<URL> urls = getURLList();
 
         if (urls.isEmpty()) {
@@ -99,7 +99,7 @@ public class ExchangeRateHandlerImpl implements Handler {
         public double rate;
 
         private String getFormattedDate() {
-            return new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH).format(this.date);
+            return new SimpleDateFormat("dd-MMM-yyyy", Locale.forLanguageTag("RU")).format(this.date);
         }
 
         @Override

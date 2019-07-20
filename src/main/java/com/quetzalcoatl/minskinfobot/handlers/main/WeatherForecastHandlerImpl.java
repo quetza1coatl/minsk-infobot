@@ -23,17 +23,17 @@ public class WeatherForecastHandlerImpl implements Handler {
     private static final LocalTime MORNING_TIME = LocalTime.of(9, 0);
     private static final LocalTime MIDDLE_TIME = LocalTime.of(15, 0);
     private static final LocalTime EVENING_TIME = LocalTime.of(21, 0);
-    private static final String CELCIUS = "\u2103";
+    private static final int NUMBER_OF_WEATHER_RECORDS = 10;
+
     private static Map<String, String> emojiMap;
+    private static final Logger log = getLogger(WeatherForecastHandlerImpl.class);
 
     static {
         fillEmojiMap();
     }
 
-    private static final Logger log = getLogger(WeatherForecastHandlerImpl.class);
-
     @Override
-    public String getText(Update update) {
+    public final String getText(Update update) {
         String result = null;
         URL url;
         ObjectMapper mapper = new ObjectMapper();
@@ -52,6 +52,7 @@ public class WeatherForecastHandlerImpl implements Handler {
                             ZonedDateTime.ofInstant(Instant.ofEpochSecond(line.findValue("dt").asLong()), ZoneId.of("GMT+03:00")),
                             (int) Math.round(line.findValue("temp").asDouble()),
                             line.findValue("humidity").asInt(),
+                            (int) Math.round(line.findValue("pressure").asDouble()),
                             line.get("weather").findValue("main").toString().replace("\"", ""),
                             line.findValue("description").toString().replace("\"", ""),
                             line.findValue("all").asInt(),
@@ -65,19 +66,26 @@ public class WeatherForecastHandlerImpl implements Handler {
                     .filter(weather -> weather.getTime().equals(MORNING_TIME) ||
                             weather.getTime().equals(MIDDLE_TIME) ||
                             weather.getTime().equals(EVENING_TIME))
-                    .map(Weather::toString)
-                    .limit(10)
+                    .limit(NUMBER_OF_WEATHER_RECORDS)
+                    .map(Weather::getFormattedText)
                     .collect(Collectors.joining("\n"));
         } catch (MalformedURLException e) {
             log.error("Can't get weather URL", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Can't parse weather data", e);
         }
         return result;
     }
 
 
     private static class Weather {
+
+        private static final String CELSIUS = "\u2103";
+        private static final String WIND = "\uD83C\uDF2C";
+        private static final String HUMIDITY = "\uD83D\uDCA6";
+        private static final String CLOCK = "\uD83D\uDD50";
+        private static final String PRESSURE = "\u21D3";
+        private static final String CLOUDINESS = "\u2601";
 
         /**
          * Date time with a time-zone (UTC+3 for Minsk)
@@ -91,6 +99,10 @@ public class WeatherForecastHandlerImpl implements Handler {
          * Humidity, %
          */
         private int humidity;
+        /**
+         * Atmospheric pressure on the sea level, hPa
+         */
+        private int pressure;
         /**
          * General description
          */
@@ -110,12 +122,13 @@ public class WeatherForecastHandlerImpl implements Handler {
 
 
         private Weather(
-                ZonedDateTime dateTime, int temperature, int humidity, String general,
+                ZonedDateTime dateTime, int temperature, int humidity, int pressure, String general,
                 String description, int cloudiness, int windSpeed
         ) {
             this.dateTime = dateTime;
             this.temperature = temperature;
             this.humidity = humidity;
+            this.pressure = pressure;
             this.general = general;
             this.description = description;
             this.cloudiness = cloudiness;
@@ -127,16 +140,39 @@ public class WeatherForecastHandlerImpl implements Handler {
             return dateTime.toLocalTime();
         }
 
-        //TODO отформатировать вывод
-        @Override
-        public String toString() {
-            // format date
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM - HH:mm");
-            String formattedDateTime = dateTime.format(formatter);
+        private String getFormattedText() {
+
+            // format date - time
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+            String formattedDateTime = "*" + dateTime.format(dateFormatter) +
+                    "*  " + CLOCK + " " + dateTime.format(timeFormatter);
+
             // get weather emoji
             String weatherEmoji = emojiMap.getOrDefault(general, "");
 
-            return String.format("%s\n%s ", formattedDateTime, weatherEmoji);
+            // format temperature
+            String formattedTemperature = "*" + temperature + CELSIUS + "*";
+            if (temperature > 0) {
+                formattedTemperature = "+" + formattedTemperature;
+            }
+
+            //  cloudiness
+            String formattedCloudiness = CLOUDINESS + cloudiness + "%";
+
+            // pressure
+            String formattedPressure = PRESSURE + pressure + " гПа";
+
+            // humidity
+            String formattedHumidity = HUMIDITY + humidity + "%";
+
+            // wind
+            String formattedWind = WIND + windSpeed + " м/сек";
+
+            return String.format(
+                    "%s\n%s  %s %s\n%s  %s  %s  %s\n",
+                    formattedDateTime, weatherEmoji, formattedTemperature,
+                    description, formattedHumidity, formattedWind, formattedPressure, formattedCloudiness);
         }
 
     }

@@ -30,12 +30,12 @@ public class Service {
     private static final Logger log = getLogger(Service.class);
     private final MinskInfoBot minskInfoBot;
 
-    public Service(MinskInfoBot minskInfoBot) {
-        this.minskInfoBot = minskInfoBot;
+    public Service(MinskInfoBot bot) {
+        minskInfoBot = bot;
     }
 
 
-    public void handleTextMessage(Update update) {
+    public final void handleTextMessage(Update update) {
         String response;
         String userRequest = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();

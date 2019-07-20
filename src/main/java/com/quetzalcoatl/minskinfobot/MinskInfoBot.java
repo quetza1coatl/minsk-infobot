@@ -16,13 +16,13 @@ public class MinskInfoBot extends TelegramLongPollingBot {
 
 
     @Override
-    public String getBotUsername() { return System.getenv("BotUserName"); }
+    public final String getBotUsername() { return System.getenv("BotUserName"); }
 
     @Override
-    public String getBotToken() { return System.getenv("BotToken"); }
+    public final String getBotToken() { return System.getenv("BotToken"); }
 
     @Override
-    public void onUpdateReceived(Update update) {
+    public final void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             service.handleTextMessage(update);
         }

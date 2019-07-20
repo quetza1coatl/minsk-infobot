@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class MovieHandlerImpl implements Handler {
 
     @Override
-    public String getText(Update update) {
+    public final String getText(Update update) {
         return "STUB ^^ Да ничё интересного пока не идёт(";
     }
 

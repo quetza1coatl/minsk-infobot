@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class NewsHandlerImpl implements Handler {
 
     @Override
-    public String getText(Update update) {
+    public final String getText(Update update) {
         return "STUB ^^ Новости наиприятнейшие, с какой начать?";
     }
 
