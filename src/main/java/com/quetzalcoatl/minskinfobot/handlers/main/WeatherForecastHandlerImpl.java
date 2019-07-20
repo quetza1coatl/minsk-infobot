@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -23,6 +23,12 @@ public class WeatherForecastHandlerImpl implements Handler {
     private static final LocalTime MORNING_TIME = LocalTime.of(9, 0);
     private static final LocalTime MIDDLE_TIME = LocalTime.of(15, 0);
     private static final LocalTime EVENING_TIME = LocalTime.of(21, 0);
+    private static final String CELCIUS = "\u2103";
+    private static Map<String, String> emojiMap;
+
+    static {
+        fillEmojiMap();
+    }
 
     private static final Logger log = getLogger(WeatherForecastHandlerImpl.class);
 
@@ -46,7 +52,8 @@ public class WeatherForecastHandlerImpl implements Handler {
                             ZonedDateTime.ofInstant(Instant.ofEpochSecond(line.findValue("dt").asLong()), ZoneId.of("GMT+03:00")),
                             (int) Math.round(line.findValue("temp").asDouble()),
                             line.findValue("humidity").asInt(),
-                            line.findValue("description").toString(),
+                            line.get("weather").findValue("main").toString().replace("\"", ""),
+                            line.findValue("description").toString().replace("\"", ""),
                             line.findValue("all").asInt(),
                             (int) Math.round(line.findValue("speed").asDouble())
                     );
@@ -69,6 +76,7 @@ public class WeatherForecastHandlerImpl implements Handler {
         return result;
     }
 
+
     private static class Weather {
 
         /**
@@ -84,6 +92,10 @@ public class WeatherForecastHandlerImpl implements Handler {
          */
         private int humidity;
         /**
+         * General description
+         */
+        private String general;
+        /**
          * Weather condition
          */
         private String description;
@@ -98,12 +110,13 @@ public class WeatherForecastHandlerImpl implements Handler {
 
 
         private Weather(
-                ZonedDateTime dateTime, int temperature, int humidity,
+                ZonedDateTime dateTime, int temperature, int humidity, String general,
                 String description, int cloudiness, int windSpeed
         ) {
             this.dateTime = dateTime;
             this.temperature = temperature;
             this.humidity = humidity;
+            this.general = general;
             this.description = description;
             this.cloudiness = cloudiness;
             this.windSpeed = windSpeed;
@@ -117,8 +130,31 @@ public class WeatherForecastHandlerImpl implements Handler {
         //TODO отформатировать вывод
         @Override
         public String toString() {
-            return "stub";
+            // format date
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM - HH:mm");
+            String formattedDateTime = dateTime.format(formatter);
+            // get weather emoji
+            String weatherEmoji = emojiMap.getOrDefault(general, "");
+
+            return String.format("%s\n%s ", formattedDateTime, weatherEmoji);
         }
 
     }
+
+    private static void fillEmojiMap() {
+        emojiMap = new HashMap<String, String>() {{
+            put("Clear", "\uD83C\uDF1E");
+            put("Clouds", "\u2601");
+            put("Rain", "\u2614");
+            put("Drizzle", "\u2614");
+            put("Thunderstorm", "\u26C8");
+            put("Snow", "\uD83C\uDF28");
+            put("Mist", "\uD83C\uDF2B");
+            put("Smoke", "\uD83C\uDF2B");
+            put("Dust", "\uD83C\uDF2B");
+            put("Haze", "\uD83C\uDF2B");
+            put("Fog", "\uD83C\uDF2B");
+        }};
+    }
+
 }
