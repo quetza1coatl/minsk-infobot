@@ -20,10 +20,8 @@ public class WeatherForecastHandlerImpl implements Handler {
 
     private static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast?q=Minsk&units=metric&" +
             "APPID=" + System.getenv("OpenWeatherToken");
-    private static final LocalTime MORNING_TIME = LocalTime.of(9, 0);
-    private static final LocalTime MIDDLE_TIME = LocalTime.of(15, 0);
-    private static final LocalTime EVENING_TIME = LocalTime.of(21, 0);
     private static final int NUMBER_OF_WEATHER_RECORDS = 10;
+    private static final String INFO = "Погода для Минска с интервалом в 3 часа\n-----\n";
 
     private static Map<String, String> emojiMap;
     private static final Logger log = getLogger(WeatherForecastHandlerImpl.class);
@@ -63,9 +61,6 @@ public class WeatherForecastHandlerImpl implements Handler {
             }
             // filtering time to avoid redundant information and collect result to string
             result = weatherList.stream()
-                    .filter(weather -> weather.getTime().equals(MORNING_TIME) ||
-                            weather.getTime().equals(MIDDLE_TIME) ||
-                            weather.getTime().equals(EVENING_TIME))
                     .limit(NUMBER_OF_WEATHER_RECORDS)
                     .map(Weather::getFormattedText)
                     .collect(Collectors.joining("\n"));
@@ -74,7 +69,7 @@ public class WeatherForecastHandlerImpl implements Handler {
         } catch (IOException e) {
             log.error("Can't parse weather data", e);
         }
-        return result;
+        return INFO + result;
     }
 
 
@@ -136,10 +131,6 @@ public class WeatherForecastHandlerImpl implements Handler {
         }
 
 
-        LocalTime getTime() {
-            return dateTime.toLocalTime();
-        }
-
         private String getFormattedText() {
 
             // format date - time
@@ -172,7 +163,7 @@ public class WeatherForecastHandlerImpl implements Handler {
             return String.format(
                     "%s\n%s  %s %s\n%s  %s  %s  %s\n",
                     formattedDateTime, weatherEmoji, formattedTemperature,
-                    description, formattedHumidity, formattedWind, formattedPressure, formattedCloudiness);
+                    description, formattedWind, formattedPressure, formattedCloudiness, formattedHumidity);
         }
 
     }
