@@ -10,7 +10,7 @@ public class StartHandlerImpl implements Handler {
         String username = update.getMessage().getFrom().getFirstName();
         username = username != null ? username : "unknown person";
         return String.format("Привет, %s! " + HAND + "\n" +
-                "Бот предоставляет информацию о курсах валют, прогнозе погоды, киносеансах, новостях." +
+                "Бот предоставляет информацию о курсах валют, прогнозе погоды, киносеансах и новостях." +
                 " Информация актуальна для города Минска (и в ряде случаев для всей республики)." +
                 " Основные сервисы доступны через встроенную клавиатуру.\n\n" +
                 "/help - описание доступных сервисов\n", username);

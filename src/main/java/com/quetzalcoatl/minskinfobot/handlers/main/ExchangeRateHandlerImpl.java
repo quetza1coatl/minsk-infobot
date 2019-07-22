@@ -42,10 +42,9 @@ public class ExchangeRateHandlerImpl implements Handler {
             return null;
         }
 
-        return "".concat("Курсы валют Нацбанка РБ \n[")
-                .concat(rates.get(0).getFormattedDate())
-                .concat("]\n")
-                .concat(rates.stream()
+        return "*Национальный банк Республики Беларусь:*\n" +
+                rates.get(0).getFormattedDate() + "\n" +
+                (rates.stream()
                         .map(Rates::toString)
                         .collect(Collectors.joining("\n")));
     }
@@ -82,7 +81,8 @@ public class ExchangeRateHandlerImpl implements Handler {
     @JsonAutoDetect
     private static class Rates {
 
-        public Rates() {}
+        public Rates() {
+        }
 
 
         @JsonProperty("Cur_ID")

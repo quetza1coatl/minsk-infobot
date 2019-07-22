@@ -16,13 +16,17 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * This parser based on free weather  <a href="https://openweathermap.org">API</a>.
+ * Free API allows to do no more than 60 calls per minute.
+ * The weather data in API system is updated no more than one time every 10 minutes.
+ */
 public class WeatherForecastHandlerImpl implements Handler {
 
-    private static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast?q=Minsk&units=metric&" +
+    private static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast?id=625144&units=metric&" +
             "APPID=" + System.getenv("OpenWeatherToken");
     private static final int NUMBER_OF_WEATHER_RECORDS = 10;
-    private static final String INFO = "Погода для Минска с интервалом в 3 часа\n-----\n";
-
+    private static final String INFO = "*Прогноз погоды (г. Минск)*\n\n";
     private static Map<String, String> emojiMap;
     private static final Logger log = getLogger(WeatherForecastHandlerImpl.class);
 
@@ -38,23 +42,34 @@ public class WeatherForecastHandlerImpl implements Handler {
 
         try {
             url = new URL(WEATHER_URL);
-
-            //todo если получаемый json это отказ API от предоставления данных (лимит запросов в минуту) -> return null
             JsonNode head = mapper.readTree(url);
             JsonNode mainArray = head.get("list");
+
+            // If the number of requests per minute to API is exceeded, API returns a json response,
+            // that cannot be processed with this logic. The value of mainArray in this case will be null.
+            if (mainArray == null) {
+                return null;
+            }
+
             List<Weather> weatherList = new ArrayList<>();
 
             if (mainArray.isArray()) {
                 for (final JsonNode line : mainArray) {
+                    //  It is possible to meet more than one weather condition. The first weather condition in API
+                    // respond is primary. Variable `weatherCondition` is the first condition.
+                    JsonNode weatherCondition = line.get("weather").get(0);
+
+                    // If json contains a zero value, the corresponding field of the object
+                    // is filled with a Integer.MIN_VALUE, which is processed further in getFormattedText()
                     Weather weather = new Weather(
                             ZonedDateTime.ofInstant(Instant.ofEpochSecond(line.findValue("dt").asLong()), ZoneId.of("GMT+03:00")),
-                            (int) Math.round(line.findValue("temp").asDouble()),
-                            line.findValue("humidity").asInt(),
-                            (int) Math.round(line.findValue("pressure").asDouble()),
-                            line.get("weather").findValue("main").toString().replace("\"", ""),
-                            line.findValue("description").toString().replace("\"", ""),
-                            line.findValue("all").asInt(),
-                            (int) Math.round(line.findValue("speed").asDouble())
+                            (int) Math.round(line.findValue("temp").asDouble(Integer.MIN_VALUE)),
+                            line.findValue("humidity").asInt(Integer.MIN_VALUE),
+                            (int) Math.round(line.findValue("pressure").asDouble(Integer.MIN_VALUE)),
+                            weatherCondition.findValue("main").toString().replace("\"", ""),
+                            weatherCondition.findValue("description").toString().replace("\"", ""),
+                            line.findValue("all").asInt(Integer.MIN_VALUE),
+                            (int) Math.round(line.findValue("speed").asDouble(Integer.MIN_VALUE))
                     );
                     weatherList.add(weather);
                 }
@@ -63,7 +78,7 @@ public class WeatherForecastHandlerImpl implements Handler {
             result = weatherList.stream()
                     .limit(NUMBER_OF_WEATHER_RECORDS)
                     .map(Weather::getFormattedText)
-                    .collect(Collectors.joining("\n"));
+                    .collect(Collectors.joining("\n\n"));
         } catch (MalformedURLException e) {
             log.error("Can't get weather URL", e);
         } catch (IOException e) {
@@ -78,7 +93,6 @@ public class WeatherForecastHandlerImpl implements Handler {
         private static final String CELSIUS = "\u2103";
         private static final String WIND = "\uD83C\uDF2C";
         private static final String HUMIDITY = "\uD83D\uDCA6";
-        private static final String CLOCK = "\uD83D\uDD50";
         private static final String PRESSURE = "\u21D3";
         private static final String CLOUDINESS = "\u2601";
 
@@ -136,36 +150,43 @@ public class WeatherForecastHandlerImpl implements Handler {
             // format date - time
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-            String formattedDateTime = "*" + dateTime.format(dateFormatter) +
-                    "*  " + CLOCK + " " + dateTime.format(timeFormatter);
+            String formattedDateTime = "_" + dateTime.format(dateFormatter) +
+                    "_ ' _" + dateTime.format(timeFormatter) + "_";
 
             // get weather emoji
             String weatherEmoji = emojiMap.getOrDefault(general, "");
 
-            // format temperature
-            String formattedTemperature = "*" + temperature + CELSIUS + "*";
+            // format temperature. Null-check from Json
+            String formattedTemperature =
+                    temperature != Integer.MIN_VALUE ? "*" + temperature + CELSIUS + "*" : "temp: N/A";
             if (temperature > 0) {
                 formattedTemperature = "+" + formattedTemperature;
             }
 
-            //  cloudiness
-            String formattedCloudiness = CLOUDINESS + cloudiness + "%";
+            // description. Null-check from Json
+            String formattedDescription = description.equals("null") ? "description: N/A" : description;
 
-            // pressure
-            String formattedPressure = PRESSURE + pressure + " гПа";
+            //  cloudiness. Null-check from Json
+            String formattedCloudiness =
+                    cloudiness != Integer.MIN_VALUE ? CLOUDINESS + cloudiness + "%" : CLOUDINESS + "N/A";
 
-            // humidity
-            String formattedHumidity = HUMIDITY + humidity + "%";
+            // pressure. Null-check from Json
+            String formattedPressure =
+                    pressure != Integer.MIN_VALUE ? PRESSURE + pressure + " гПа" : PRESSURE + "N/A";
 
-            // wind
-            String formattedWind = WIND + windSpeed + " м/сек";
+            // humidity. Null-check from Json
+            String formattedHumidity =
+                    humidity != Integer.MIN_VALUE ? HUMIDITY + humidity + "%" : HUMIDITY + "N/A";
+
+            // wind. Null-check from Json
+            String formattedWind =
+                    windSpeed != Integer.MIN_VALUE ? WIND + windSpeed + " м/сек" : WIND + "N/A";
 
             return String.format(
-                    "%s\n%s  %s %s\n%s  %s  %s  %s\n",
+                    "    %s\n%s  %s %s\n%s  %s  %s  %s\n",
                     formattedDateTime, weatherEmoji, formattedTemperature,
-                    description, formattedWind, formattedPressure, formattedCloudiness, formattedHumidity);
+                    formattedDescription, formattedPressure, formattedWind, formattedHumidity ,formattedCloudiness);
         }
-
     }
 
     private static void fillEmojiMap() {
