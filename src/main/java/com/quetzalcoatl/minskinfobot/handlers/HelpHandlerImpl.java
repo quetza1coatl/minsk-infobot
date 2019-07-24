@@ -4,7 +4,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class HelpHandlerImpl implements Handler {
     private static final String WIND = "\uD83C\uDF2C";
-    private static final String HUMIDITY = "\uD83D\uDCA6";
+    private static final String HUMIDITY = "\uD83D\uDCA7";
     private static final String PRESSURE = "\u21D3";
     private static final String CLOUDINESS = "\u2601";
 
