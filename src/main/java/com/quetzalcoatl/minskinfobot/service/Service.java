@@ -106,6 +106,7 @@ public class Service {
         message.setText(answer);
         getReplyKeyboardMarkup(message);
         message.enableMarkdown(true);
+        message.disableWebPagePreview();
         try {
             minskInfoBot.execute(message);
         } catch (TelegramApiException e) {
