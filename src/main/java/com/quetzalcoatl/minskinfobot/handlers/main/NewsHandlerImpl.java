@@ -17,6 +17,7 @@ public class NewsHandlerImpl implements Handler {
 
     private static final String RSS_URL = "https://news.tut.by/rss/all.rss";
     private static final int NUMBER_OF_RSS_RECORDS = 15;
+    private static final String INFO = "*Новости* [tut.by](https://news.tut.by/)\n\n";
     private static final Logger log = getLogger(NewsHandlerImpl.class);
 
     @Override
@@ -49,7 +50,7 @@ public class NewsHandlerImpl implements Handler {
             return null;
         }
 
-        return rssList.stream().map(RssEntry::getFormattedText).collect(Collectors.joining("\n\n"));
+        return INFO +  rssList.stream().map(RssEntry::getFormattedText).collect(Collectors.joining("\n\n"));
     }
 
 
