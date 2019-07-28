@@ -18,7 +18,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MovieHandlerImpl implements Handler {
     private static final String MOVIE_URL = "https://afisha.tut.by/film/";
     private static final int NUMBER_OF_MOVIE_RECORDS = 20;
-    private static final String INFO = "*Киноафиша* [tut.by](https://afisha.tut.by/film/) (г.Минск)\n\n";
+    private static final String INFO = "*Киноафиша Минска* [tut.by](https://afisha.tut.by/film/)\n\n";
     private static final Logger log = getLogger(MovieHandlerImpl.class);
 
     @Override

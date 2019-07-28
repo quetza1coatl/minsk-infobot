@@ -25,6 +25,7 @@ public class ExchangeRateHandlerImpl implements Handler {
     private static final String USD = URL_RATES + "145";
     private static final String EURO = URL_RATES + "292";
     private static final String RUB = URL_RATES + "298";
+    private static final String INFO = "*Курсы валют* [Национального банка](http://www.nbrb.by/)\n\n";
 
     @Override
     public final String getText(Update update) {
@@ -42,7 +43,7 @@ public class ExchangeRateHandlerImpl implements Handler {
             return null;
         }
 
-        return "*Национальный банк Республики Беларусь:*\n" +
+        return INFO +
                 rates.get(0).getFormattedDate() + "\n" +
                 (rates.stream()
                         .map(Rates::toString)
