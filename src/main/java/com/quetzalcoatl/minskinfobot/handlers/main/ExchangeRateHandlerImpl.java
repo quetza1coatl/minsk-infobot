@@ -97,10 +97,6 @@ public class ExchangeRateHandlerImpl implements Handler {
     @JsonAutoDetect
     private static class Rates {
 
-        public Rates() {
-        }
-
-
         @JsonProperty("Cur_ID")
         public String id;
         @JsonProperty("Date")

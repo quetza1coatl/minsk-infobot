@@ -8,7 +8,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Main {
+public final class Main {
+
+    private Main(){}
+
 
     private static final Logger log = getLogger(Service.class);
 

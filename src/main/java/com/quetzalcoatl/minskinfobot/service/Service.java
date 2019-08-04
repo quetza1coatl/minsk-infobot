@@ -74,6 +74,7 @@ public class Service {
                 break;
             default:
                 handler = new HelpHandlerImpl();
+                break;
         }
 
         if ("none".equals(handler.getAlias())) {

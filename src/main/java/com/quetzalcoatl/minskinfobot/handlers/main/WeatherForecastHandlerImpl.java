@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quetzalcoatl.minskinfobot.handlers.Handler;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,8 +28,8 @@ public class WeatherForecastHandlerImpl implements Handler {
             "APPID=" + System.getenv("OpenWeatherToken");
     private static final int NUMBER_OF_WEATHER_RECORDS = 10;
     private static final String INFO = "*Прогноз погоды (г. Минск)*\n\n";
-    private static Map<String, String> emojiMap;
-    private static Map<String, String> dictionary;
+    private static Map<String, String> emojiMap = new HashMap<>();
+    private static Map<String, String> dictionary = new HashMap<>();
     private static final Logger log = getLogger(WeatherForecastHandlerImpl.class);
 
     static {
@@ -39,12 +38,12 @@ public class WeatherForecastHandlerImpl implements Handler {
     }
 
     @Override
-    public String getAlias(){
+    public String getAlias() {
         return ALIAS;
     }
 
     @Override
-    public String getHandlerName(){
+    public String getHandlerName() {
         return HANDLER_NAME;
     }
 
@@ -96,7 +95,7 @@ public class WeatherForecastHandlerImpl implements Handler {
         }
 
         //TODO: delete after tests
-        log.info("User {}. Cache: Response was got from server",  update.getMessage().getFrom().getFirstName());
+        log.info("User {}. Cache: Response was got from server", update.getMessage().getFrom().getFirstName());
         return INFO + result;
     }
 
@@ -107,6 +106,7 @@ public class WeatherForecastHandlerImpl implements Handler {
         private static final String HUMIDITY = "\uD83D\uDCA7";
         private static final String PRESSURE = "\u21D3";
         private static final String CLOUDINESS = "\u2601";
+        private static final String N_A = "N/A";
 
         /**
          * Date time with a time-zone (UTC+3 for Minsk)
@@ -171,30 +171,30 @@ public class WeatherForecastHandlerImpl implements Handler {
 
             // format temperature. Null-check from Json
             String formattedTemperature =
-                    temperature != Integer.MIN_VALUE ? "*" + temperature + CELSIUS + "*" : "temp: N/A";
+                    temperature != Integer.MIN_VALUE ? "*" + temperature + CELSIUS + "*" : "temp: "+ N_A;
             if (temperature > 0) {
                 formattedTemperature = "+" + formattedTemperature;
             }
 
             // description. Null-check from Json. Getting data from dictionary
-            String formattedDescription = description.equals("null") ?
-                    "description: N/A" : dictionary.getOrDefault(description, description);
+            String formattedDescription = "null".equals(description) ?
+                    "description: " + N_A : dictionary.getOrDefault(description, description);
 
             //  cloudiness. Null-check from Json
             String formattedCloudiness =
-                    cloudiness != Integer.MIN_VALUE ? CLOUDINESS + cloudiness + "%" : CLOUDINESS + "N/A";
+                    cloudiness != Integer.MIN_VALUE ? CLOUDINESS + cloudiness + "%" : CLOUDINESS + N_A;
 
             // pressure. Null-check from Json
             String formattedPressure =
-                    pressure != Integer.MIN_VALUE ? PRESSURE + pressure + " гПа" : PRESSURE + "N/A";
+                    pressure != Integer.MIN_VALUE ? PRESSURE + pressure + " гПа" : PRESSURE + N_A;
 
             // humidity. Null-check from Json
             String formattedHumidity =
-                    humidity != Integer.MIN_VALUE ? HUMIDITY + humidity + "%" : HUMIDITY + "N/A";
+                    humidity != Integer.MIN_VALUE ? HUMIDITY + humidity + "%" : HUMIDITY + N_A;
 
             // wind. Null-check from Json
             String formattedWind =
-                    windSpeed != Integer.MIN_VALUE ? WIND + windSpeed + " м/сек" : WIND + "N/A";
+                    windSpeed != Integer.MIN_VALUE ? WIND + windSpeed + " м/сек" : WIND + N_A;
 
             return String.format(
                     "    %s\n%s  %s %s\n%s  %s  %s  %s\n",
@@ -229,6 +229,7 @@ public class WeatherForecastHandlerImpl implements Handler {
                     break;
                 default:
                     result = general;
+                    break;
             }
 
             return emojiMap.getOrDefault(result, "");
@@ -239,86 +240,81 @@ public class WeatherForecastHandlerImpl implements Handler {
     // otherwise - a) value used for API subtype and can be got by field Weather.description,
     // b) it's a custom value (with prefix 'custom')
     private static void fillEmojiMap() {
-        emojiMap = new HashMap<String, String>() {{
-            put("custom: sun with rain", "\uD83C\uDF26");
-            put("sun", "\u2600");
-            put("moon", "\uD83C\uDF1A");
-            put("Clouds", "\u2601");
-            put("few clouds", "\uD83C\uDF24");
-            put("scattered clouds", "\uD83C\uDF25");
-            put("broken clouds", "\uD83C\uDF25");
-            put("overcast clouds", "\u2601");
-            put("Rain", "\uD83C\uDF27");
-            put("Drizzle", "\u2614");
-            put("Thunderstorm", "\u26C8");
-            put("Snow", "\uD83C\uDF28");
-            put("Mist", "\uD83C\uDF2B");
-            put("Smoke", "\uD83C\uDF2B");
-            put("Dust", "\uD83C\uDF2B");
-            put("Haze", "\uD83C\uDF2B");
-            put("Fog", "\uD83C\uDF2B");
-        }};
+        emojiMap.put("custom: sun with rain", "\uD83C\uDF26");
+        emojiMap.put("sun", "\u2600");
+        emojiMap.put("moon", "\uD83C\uDF1A");
+        emojiMap.put("Clouds", "\u2601");
+        emojiMap.put("few clouds", "\uD83C\uDF24");
+        emojiMap.put("scattered clouds", "\uD83C\uDF25");
+        emojiMap.put("broken clouds", "\uD83C\uDF25");
+        emojiMap.put("overcast clouds", "\u2601");
+        emojiMap.put("Rain", "\uD83C\uDF27");
+        emojiMap.put("Drizzle", "\u2614");
+        emojiMap.put("Thunderstorm", "\u26C8");
+        emojiMap.put("Snow", "\uD83C\uDF28");
+        emojiMap.put("Mist", "\uD83C\uDF2B");
+        emojiMap.put("Smoke", "\uD83C\uDF2B");
+        emojiMap.put("Dust", "\uD83C\uDF2B");
+        emojiMap.put("Haze", "\uD83C\uDF2B");
+        emojiMap.put("Fog", "\uD83C\uDF2B");
     }
 
     private static void fillDictionary() {
-        dictionary = new HashMap<String, String>() {{
-            // rain
-            put("light rain", "слабый дождь");
-            put("moderate rain", "умеренный дождь");
-            put("heavy intensity rain", "сильный дождь");
-            put("very heavy rain", "очень сильный дождь");
-            put("extreme rain", "ливень");
-            put("freezing rain", "ледяной дождь");
-            put("light intensity shower rain", "незначительный ливень");
-            put("shower rain", "ливень");
-            put("heavy intensity shower rain", "сильный ливень");
-            put("ragged shower rain", "местами ливни");
-            // snow
-            put("light snow", "слабый снег");
-            put("Snow", "снег");
-            put("Heavy snow", "сильный снег");
-            put("Sleet", "мокрый снег");
-            put("Light shower sleet", "слабый мокрый снег");
-            put("Shower sleet", "сильный мокрый снег");
-            put("Rain and snow", "снег с дождем");
-            put("Light shower snow", "слабый снег с дождем");
-            put("Shower snow", "снегопад");
-            put("Heavy shower snow", "сильный снегопад");
-            // cloudiness
-            put("clear sky", "безоблачно");
-            put("few clouds", "незначительная облачность");
-            put("scattered clouds", "средняя облачность");
-            put("broken clouds", "значительная облачность");
-            put("overcast clouds", "сплошная облачность");
-            //atmosphere
-            put("mist", "туман");
-            put("Smoke", "дымка");
-            put("Haze", "дымка");
-            put("fog", "туман");
-            put("squalls", "шквал");
-            // drizzle
-            put("light intensity drizzle", "слабая морось");
-            put("drizzle", "морось");
-            put("heavy intensity drizzle", "сильная морось");
-            put("light intensity drizzle rain", "слабо моросящий дождь");
-            put("drizzle rain", "моросящий дождь");
-            put("heavy intensity drizzle rain", "сильно моросящий дождь");
-            put("shower rain and drizzle", "ливень и морось");
-            put("heavy shower rain and drizzle", "сильный ливень и морось");
-            put("shower drizzle", "сильная морось");
-            // thunderstorm
-            put("thunderstorm with light rain", "гроза, слабый дождь");
-            put("thunderstorm with rain", "гроза с дождем");
-            put("thunderstorm with heavy rain", "гроза, сильный дождь");
-            put("light thunderstorm", "легкая гроза");
-            put("thunderstorm", "гроза");
-            put("heavy thunderstorm", "сильная гроза");
-            put("ragged thunderstorm", "местами грозы");
-            put("thunderstorm with light drizzle", "гроза, слабая морось");
-            put("thunderstorm with drizzle", "гроза, морось");
-            put("thunderstorm with heavy drizzle", "гроза, сильная морось");
-
-        }};
+        // rain
+        dictionary.put("light rain", "слабый дождь");
+        dictionary.put("moderate rain", "умеренный дождь");
+        dictionary.put("heavy intensity rain", "сильный дождь");
+        dictionary.put("very heavy rain", "очень сильный дождь");
+        dictionary.put("extreme rain", "ливень");
+        dictionary.put("freezing rain", "ледяной дождь");
+        dictionary.put("light intensity shower rain", "незначительный ливень");
+        dictionary.put("shower rain", "ливень");
+        dictionary.put("heavy intensity shower rain", "сильный ливень");
+        dictionary.put("ragged shower rain", "местами ливни");
+        // snow
+        dictionary.put("light snow", "слабый снег");
+        dictionary.put("Snow", "снег");
+        dictionary.put("Heavy snow", "сильный снег");
+        dictionary.put("Sleet", "мокрый снег");
+        dictionary.put("Light shower sleet", "слабый мокрый снег");
+        dictionary.put("Shower sleet", "сильный мокрый снег");
+        dictionary.put("Rain and snow", "снег с дождем");
+        dictionary.put("Light shower snow", "слабый снег с дождем");
+        dictionary.put("Shower snow", "снегопад");
+        dictionary.put("Heavy shower snow", "сильный снегопад");
+        // cloudiness
+        dictionary.put("clear sky", "безоблачно");
+        dictionary.put("few clouds", "незначительная облачность");
+        dictionary.put("scattered clouds", "средняя облачность");
+        dictionary.put("broken clouds", "значительная облачность");
+        dictionary.put("overcast clouds", "сплошная облачность");
+        //atmosphere
+        dictionary.put("mist", "туман");
+        dictionary.put("Smoke", "дымка");
+        dictionary.put("Haze", "дымка");
+        dictionary.put("fog", "туман");
+        dictionary.put("squalls", "шквал");
+        // drizzle
+        dictionary.put("light intensity drizzle", "слабая морось");
+        dictionary.put("drizzle", "морось");
+        dictionary.put("heavy intensity drizzle", "сильная морось");
+        dictionary.put("light intensity drizzle rain", "слабо моросящий дождь");
+        dictionary.put("drizzle rain", "моросящий дождь");
+        dictionary.put("heavy intensity drizzle rain", "сильно моросящий дождь");
+        dictionary.put("shower rain and drizzle", "ливень и морось");
+        dictionary.put("heavy shower rain and drizzle", "сильный ливень и морось");
+        dictionary.put("shower drizzle", "сильная морось");
+        // thunderstorm
+        dictionary.put("thunderstorm with light rain", "гроза, слабый дождь");
+        dictionary.put("thunderstorm with rain", "гроза с дождем");
+        dictionary.put("thunderstorm with heavy rain", "гроза, сильный дождь");
+        dictionary.put("light thunderstorm", "легкая гроза");
+        dictionary.put("thunderstorm", "гроза");
+        dictionary.put("heavy thunderstorm", "сильная гроза");
+        dictionary.put("ragged thunderstorm", "местами грозы");
+        dictionary.put("thunderstorm with light drizzle", "гроза, слабая морось");
+        dictionary.put("thunderstorm with drizzle", "гроза, морось");
+        dictionary.put("thunderstorm with heavy drizzle", "гроза, сильная морось");
     }
 
 }
