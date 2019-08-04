@@ -10,10 +10,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public final class Main {
 
+    private static final Logger log = getLogger(Service.class);
+
     private Main(){}
 
-
-    private static final Logger log = getLogger(Service.class);
 
     public static void main(String[] args) {
         ApiContextInitializer.init();
