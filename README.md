@@ -1,0 +1,2 @@
+# minsk-infobot
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9d25900626ea40e2bd371c9668e0e41a)](https://app.codacy.com/app/quetza1coatl/minsk-infobot?utm_source=github.com&utm_medium=referral&utm_content=quetza1coatl/minsk-infobot&utm_campaign=Badge_Grade_Dashboard)
