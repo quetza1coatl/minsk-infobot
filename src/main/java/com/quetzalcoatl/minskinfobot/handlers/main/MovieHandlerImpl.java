@@ -16,10 +16,23 @@ import java.util.stream.Collectors;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MovieHandlerImpl implements Handler {
+
+    private static final String HANDLER_NAME = "Сервис киноафиши";
+    private static final String ALIAS = "movie";
     private static final String MOVIE_URL = "https://afisha.tut.by/film/";
     private static final int NUMBER_OF_MOVIE_RECORDS = 20;
     private static final String INFO = "*Киноафиша Минска* [tut.by](https://afisha.tut.by/film/)\n\n";
     private static final Logger log = getLogger(MovieHandlerImpl.class);
+
+    @Override
+    public String getAlias(){
+        return ALIAS;
+    }
+
+    @Override
+    public String getHandlerName(){
+        return HANDLER_NAME;
+    }
 
     @Override
     public final String getText(Update update) {
@@ -40,6 +53,9 @@ public class MovieHandlerImpl implements Handler {
         // Each row contains a list of films
         rows.forEach(row -> items.addAll(row.getElementsByAttributeValue("class", "lists__li ")));
 
+        //TODO: delete after tests
+        log.info("User {}. Cache: Response was got from server", update.getMessage().getFrom().getFirstName());
+
         return INFO + items.stream()
                 .limit(NUMBER_OF_MOVIE_RECORDS)
                 .map(item -> String.format("[%s](%s)\n%s. %s",
@@ -51,7 +67,7 @@ public class MovieHandlerImpl implements Handler {
                         item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text(),
                         // raiting. Can be empty
                         item.getElementsByAttributeValue("class", "raiting hot").text().isEmpty() ?
-                                "" : "Rate:" + item.getElementsByAttributeValue("class", "raiting hot").text()))
+                                "" : "Rate: *" + item.getElementsByAttributeValue("class", "raiting hot").text()+ "*"))
                 .collect(Collectors.joining("\n\n"));
     }
 

@@ -3,6 +3,10 @@ package com.quetzalcoatl.minskinfobot.service;
 import com.quetzalcoatl.minskinfobot.MinskInfoBot;
 import com.quetzalcoatl.minskinfobot.handlers.*;
 import com.quetzalcoatl.minskinfobot.handlers.main.*;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.xml.XmlConfiguration;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -10,6 +14,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,20 +24,26 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Service {
 
-    private static final String SERVICE_ERROR_MESSAGE = "Сервис временно недоступен, попробуйте позже";
+    private static final String SERVICE_ERROR_MESSAGE = "временно недоступен, попробуйте позже";
     private static final String START = "/start";
     private static final String HELP = "/help";
     private static final String EXCHANGE_RATES = "курсы валют";
     private static final String WEATHER_FORECAST = "прогноз погоды";
     private static final String MOVIE = "киноафиша";
     private static final String NEWS = "новости";
+    private static final String CACHE_KEY = "Cache key";
 
+    // Caching
+    private URL cacheConfigUrl = getClass().getResource("/ehcache.xml");
+    private XmlConfiguration xmlConfig = new XmlConfiguration(cacheConfigUrl);
+    private CacheManager cacheManager = CacheManagerBuilder.newCacheManager(xmlConfig);
 
     private static final Logger log = getLogger(Service.class);
     private final MinskInfoBot minskInfoBot;
 
     public Service(MinskInfoBot bot) {
         minskInfoBot = bot;
+        cacheManager.init();
     }
 
 
@@ -63,10 +75,30 @@ public class Service {
             default:
                 handler = new HelpHandlerImpl();
         }
-        response = handler.getText(update);
+
+        if ("none".equals(handler.getAlias())) {
+            response = handler.getText(update);
+            // Caching responses from handlers and getting them from cache
+        } else {
+            Cache<String, String> cache = cacheManager.getCache(handler.getAlias(), String.class, String.class);
+            if (cache.containsKey(CACHE_KEY)) {
+                response = cache.get(CACHE_KEY);
+                //TODO: delete after tests
+                log.info("User {}. Get data from cache. Alias:{}", update.getMessage().getFrom().getFirstName(), handler.getAlias());
+            } else {
+                response = handler.getText(update);
+                if (response != null) {
+                    cache.put(CACHE_KEY, response);
+                }
+                //TODO: delete after tests
+                log.info("User {}. Get data from method. Alias:{}", update.getMessage().getFrom().getFirstName(), handler.getAlias());
+            }
+        }
+
+
         if (response == null) {
             log.error("Unable to get data from {}", handler.getClass().getSimpleName());
-            sendMsg(SERVICE_ERROR_MESSAGE, chatId);
+            sendMsg(handler.getHandlerName() + SERVICE_ERROR_MESSAGE, chatId);
 
         } else {
             sendMsg(response, chatId);
@@ -105,8 +137,10 @@ public class Service {
         message.setChatId(chatID);
         message.setText(answer);
         getReplyKeyboardMarkup(message);
+        //settings
         message.enableMarkdown(true);
         message.disableWebPagePreview();
+
         try {
             minskInfoBot.execute(message);
         } catch (TelegramApiException e) {

@@ -23,6 +23,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class WeatherForecastHandlerImpl implements Handler {
 
+    private static final String HANDLER_NAME = "Сервис прогноза погоды";
+    private static final String ALIAS = "weather";
     private static final String WEATHER_URL = "http://api.openweathermap.org/data/2.5/forecast?id=625144&units=metric&" +
             "APPID=" + System.getenv("OpenWeatherToken");
     private static final int NUMBER_OF_WEATHER_RECORDS = 10;
@@ -34,6 +36,16 @@ public class WeatherForecastHandlerImpl implements Handler {
     static {
         fillEmojiMap();
         fillDictionary();
+    }
+
+    @Override
+    public String getAlias(){
+        return ALIAS;
+    }
+
+    @Override
+    public String getHandlerName(){
+        return HANDLER_NAME;
     }
 
     @Override
@@ -82,9 +94,11 @@ public class WeatherForecastHandlerImpl implements Handler {
         } catch (IOException e) {
             log.error("Can't parse weather data", e);
         }
+
+        //TODO: delete after tests
+        log.info("User {}. Cache: Response was got from server",  update.getMessage().getFrom().getFirstName());
         return INFO + result;
     }
-
 
     private static class Weather {
 

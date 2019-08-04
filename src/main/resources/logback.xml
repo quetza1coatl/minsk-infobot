@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="30 seconds">
-
-    <!-- To enable JMX Management -->
     <jmxConfigurator/>
 
     <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file>log/telebot.log</file>
+        <file>log/MinskInfoBot.log</file>
 
         <encoder>
             <charset>UTF-8</charset>

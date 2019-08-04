@@ -6,14 +6,13 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 /**
  * Поставляет имя и токен бота.
- * Слушает запросы пользователя и в зависимости от их типа маппит их на соответствующий метод сервиса.
  * Инициализирует сервис, передавая в него экземпляр контроллера для возможности отправки сообщений из сервиса
+ * Слушает запросы пользователя и передает в сервис.
  */
 
 public class MinskInfoBot extends TelegramLongPollingBot {
 
     private Service service = new Service(this);
-
 
     @Override
     public final String getBotUsername() { return System.getenv("BotUserName"); }

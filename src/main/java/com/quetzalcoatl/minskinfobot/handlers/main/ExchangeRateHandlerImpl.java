@@ -19,13 +19,25 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ExchangeRateHandlerImpl implements Handler {
 
-    private static final Logger log = getLogger(ExchangeRateHandlerImpl.class);
-
+    private static final String HANDLER_NAME = "Сервис курсов валют";
+    private static final String ALIAS = "exchange";
     private static final String URL_RATES = "http://www.nbrb.by/API/ExRates/Rates/";
     private static final String USD = URL_RATES + "145";
     private static final String EURO = URL_RATES + "292";
     private static final String RUB = URL_RATES + "298";
     private static final String INFO = "*Курсы валют* [Национального банка](http://www.nbrb.by/)\n\n";
+
+    private static final Logger log = getLogger(ExchangeRateHandlerImpl.class);
+
+    @Override
+    public String getAlias(){
+        return ALIAS;
+    }
+
+    @Override
+    public String getHandlerName(){
+        return HANDLER_NAME;
+    }
 
     @Override
     public final String getText(Update update) {
@@ -42,6 +54,9 @@ public class ExchangeRateHandlerImpl implements Handler {
             log.error("returns null because Rates list is empty");
             return null;
         }
+
+        //TODO: delete after tests
+        log.info("User {}. Cache: Response was got from server",  update.getMessage().getFrom().getFirstName());
 
         return INFO +
                 rates.get(0).getFormattedDate() + "\n" +

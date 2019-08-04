@@ -15,10 +15,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class NewsHandlerImpl implements Handler {
 
+    private static final String HANDLER_NAME = "Сервис новостей";
+    private static final String ALIAS = "news";
     private static final String RSS_URL = "https://news.tut.by/rss/all.rss";
     private static final int NUMBER_OF_RSS_RECORDS = 15;
     private static final String INFO = "*Новости* [tut.by](https://news.tut.by/)\n\n";
     private static final Logger log = getLogger(NewsHandlerImpl.class);
+
+    @Override
+    public String getAlias(){
+        return ALIAS;
+    }
+
+    @Override
+    public String getHandlerName(){
+        return HANDLER_NAME;
+    }
 
     @Override
     public final String getText(Update update) {
@@ -49,6 +61,9 @@ public class NewsHandlerImpl implements Handler {
         if (rssList.isEmpty()) {
             return null;
         }
+
+        //TODO: delete after tests
+        log.info("User {}. Cache: Response was got from server",  update.getMessage().getFrom().getFirstName());
 
         return INFO +  rssList.stream().map(RssEntry::getFormattedText).collect(Collectors.joining("\n\n"));
     }

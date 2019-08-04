@@ -23,6 +23,8 @@
         <jsoup.version>1.11.3</jsoup.version>
         <!--Rome rss parser-->
         <rome.version>1.0</rome.version>
+        <!--Ehcache-->
+        <ehcache.version>3.6.3</ehcache.version>
     </properties>
 
     <build>
@@ -91,6 +93,13 @@
             <groupId>rome</groupId>
             <artifactId>rome</artifactId>
             <version>${rome.version}</version>
+        </dependency>
+
+        <!-- Ehcache -->
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>${ehcache.version}</version>
         </dependency>
 
     </dependencies>
