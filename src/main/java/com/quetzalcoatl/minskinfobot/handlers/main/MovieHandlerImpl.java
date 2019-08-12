@@ -25,12 +25,12 @@ public class MovieHandlerImpl implements Handler {
     private static final Logger log = getLogger(MovieHandlerImpl.class);
 
     @Override
-    public String getAlias(){
+    public String getAlias() {
         return ALIAS;
     }
 
     @Override
-    public String getHandlerName(){
+    public String getHandlerName() {
         return HANDLER_NAME;
     }
 
@@ -53,21 +53,19 @@ public class MovieHandlerImpl implements Handler {
         // Each row contains a list of films
         rows.forEach(row -> items.addAll(row.getElementsByAttributeValue("class", "lists__li ")));
 
-        //TODO: delete after tests
-        log.info("User {}. Cache: Response was got from server", update.getMessage().getFrom().getFirstName());
-
         return INFO + items.stream()
                 .limit(NUMBER_OF_MOVIE_RECORDS)
-                .map(item -> String.format("[%s](%s)\n%s. %s",
+                .map(item -> String.format("[%s](%s)%s%s",
                         // title
                         item.getElementsByAttributeValue("class", "name").first().getElementsByTag("span").text(),
                         // link
                         item.getElementsByTag("a").first().attr("href"),
-                        // description
-                        item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text(),
+                        // description.Can be empty
+                        item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text().isEmpty() ?
+                        "" : "\n" + item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text(),
                         // raiting. Can be empty
                         item.getElementsByAttributeValue("class", "raiting hot").text().isEmpty() ?
-                                "" : "Rate: *" + item.getElementsByAttributeValue("class", "raiting hot").text()+ "*"))
+                                "" : "\nРейтинг: *" + item.getElementsByAttributeValue("class", "raiting hot").text()+ "*"))
                 .collect(Collectors.joining("\n\n"));
     }
 

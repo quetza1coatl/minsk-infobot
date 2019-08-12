@@ -24,18 +24,19 @@ public class ExchangeRateHandlerImpl implements Handler {
     private static final String URL_RATES = "http://www.nbrb.by/API/ExRates/Rates/";
     private static final String USD = URL_RATES + "145";
     private static final String EURO = URL_RATES + "292";
+    private static final String UAH = URL_RATES + "290";
     private static final String RUB = URL_RATES + "298";
     private static final String INFO = "*Курсы валют* [Национального банка](http://www.nbrb.by/)\n\n";
 
     private static final Logger log = getLogger(ExchangeRateHandlerImpl.class);
 
     @Override
-    public String getAlias(){
+    public String getAlias() {
         return ALIAS;
     }
 
     @Override
-    public String getHandlerName(){
+    public String getHandlerName() {
         return HANDLER_NAME;
     }
 
@@ -54,12 +55,8 @@ public class ExchangeRateHandlerImpl implements Handler {
             log.error("returns null because Rates list is empty");
             return null;
         }
-
-        //TODO: delete after tests
-        log.info("User {}. Cache: Response was got from server",  update.getMessage().getFrom().getFirstName());
-
         return INFO +
-                rates.get(0).getFormattedDate() + "\n" +
+                "_" + rates.get(0).getFormattedDate() + "_\n" +
                 (rates.stream()
                         .map(Rates::toString)
                         .collect(Collectors.joining("\n")));
@@ -69,7 +66,7 @@ public class ExchangeRateHandlerImpl implements Handler {
     private static List<URL> getURLList() {
         List<URL> urls;
         try {
-            urls = Arrays.asList(new URL(USD), new URL(EURO), new URL(RUB));
+            urls = Arrays.asList(new URL(USD), new URL(EURO),new URL(UAH), new URL(RUB));
         } catch (MalformedURLException e) {
             log.error("Can't get URL", e);
             return new ArrayList<>();
@@ -111,12 +108,12 @@ public class ExchangeRateHandlerImpl implements Handler {
         public double rate;
 
         private String getFormattedDate() {
-            return new SimpleDateFormat("dd-MMM-yyyy", Locale.forLanguageTag("RU")).format(this.date);
+            return new SimpleDateFormat("EEEE (dd.MM)", Locale.forLanguageTag("RU")).format(this.date);
         }
 
         @Override
         public String toString() {
-            return String.format("%d %s = %.4f BYN", this.scale, this.name, this.rate);
+            return String.format("%d %s = %.4f BYN", this.scale, this.abbr, this.rate);
         }
 
     }

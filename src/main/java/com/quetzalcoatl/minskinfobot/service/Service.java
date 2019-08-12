@@ -84,25 +84,21 @@ public class Service {
             Cache<String, String> cache = cacheManager.getCache(handler.getAlias(), String.class, String.class);
             if (cache.containsKey(CACHE_KEY)) {
                 response = cache.get(CACHE_KEY);
-                //TODO: delete after tests
-                log.info("User {}. Get data from cache. Alias:{}", update.getMessage().getFrom().getFirstName(), handler.getAlias());
             } else {
                 response = handler.getText(update);
                 if (response != null) {
                     cache.put(CACHE_KEY, response);
                 }
-                //TODO: delete after tests
-                log.info("User {}. Get data from method. Alias:{}", update.getMessage().getFrom().getFirstName(), handler.getAlias());
             }
         }
 
 
         if (response == null) {
             log.error("Unable to get data from {}", handler.getClass().getSimpleName());
-            sendMsg(handler.getHandlerName() + SERVICE_ERROR_MESSAGE, chatId);
+            sendMsg(handler.getHandlerName() + " " + SERVICE_ERROR_MESSAGE, chatId, handler);
 
         } else {
-            sendMsg(response, chatId);
+            sendMsg(response, chatId, handler);
         }
     }
 
@@ -133,7 +129,7 @@ public class Service {
         keyboard.setKeyboard(rowList);
     }
 
-    private void sendMsg(String answer, long chatID) {
+    private void sendMsg(String answer, long chatID, Handler handler) {
         SendMessage message = new SendMessage();
         message.setChatId(chatID);
         message.setText(answer);
@@ -145,7 +141,8 @@ public class Service {
         try {
             minskInfoBot.execute(message);
         } catch (TelegramApiException e) {
-            log.error("Sending message failed", e);
+            log.error("Sending message from {} failed", handler.getHandlerName(), e);
+            sendMsg(handler.getHandlerName() + " " + SERVICE_ERROR_MESSAGE, chatID, handler);
         }
     }
 

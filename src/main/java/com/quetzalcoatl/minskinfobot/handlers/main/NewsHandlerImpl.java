@@ -23,12 +23,12 @@ public class NewsHandlerImpl implements Handler {
     private static final Logger log = getLogger(NewsHandlerImpl.class);
 
     @Override
-    public String getAlias(){
+    public String getAlias() {
         return ALIAS;
     }
 
     @Override
-    public String getHandlerName(){
+    public String getHandlerName() {
         return HANDLER_NAME;
     }
 
@@ -61,11 +61,7 @@ public class NewsHandlerImpl implements Handler {
         if (rssList.isEmpty()) {
             return null;
         }
-
-        //TODO: delete after tests
-        log.info("User {}. Cache: Response was got from server",  update.getMessage().getFrom().getFirstName());
-
-        return INFO +  rssList.stream().map(RssEntry::getFormattedText).collect(Collectors.joining("\n\n"));
+        return INFO + rssList.stream().map(RssEntry::getFormattedText).collect(Collectors.joining("\n\n"));
     }
 
 

@@ -25,7 +25,7 @@ public class HelpHandlerImpl implements Handler {
                 "Список фильмов в кинотеатрах Минска с сайта [tut.by](https://afisha.tut.by/film/).\n" +
                 "Названия фильмов кликабельны, ссылаются на соответствующую страницу с описанием фильма и доступными киносеансами.\n\n";
         String rateExchangeMessage = "*--Курсы валют--*\n" +
-                "Краткая информация по курсам валют [Национального Банка Республики Беларусь](http://www.nbrb.by/) (USD-BYN, EUR-BYN, RUB-BYN).";
+                "Краткая информация по курсам валют [Национального Банка Республики Беларусь](http://www.nbrb.by/) (USD-BYN, EUR-BYN, UAH-BYN, RUB-BYN).";
         return generalMessage + weatherMessage + newsMessage + movieMessage + rateExchangeMessage;
     }
 

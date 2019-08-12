@@ -94,8 +94,6 @@ public class WeatherForecastHandlerImpl implements Handler {
             log.error("Can't parse weather data", e);
         }
 
-        //TODO: delete after tests
-        log.info("User {}. Cache: Response was got from server", update.getMessage().getFrom().getFirstName());
         return INFO + result;
     }
 
@@ -171,7 +169,7 @@ public class WeatherForecastHandlerImpl implements Handler {
 
             // format temperature. Null-check from Json
             String formattedTemperature =
-                    temperature != Integer.MIN_VALUE ? "*" + temperature + CELSIUS + "*" : "temp: "+ N_A;
+                    temperature != Integer.MIN_VALUE ? "*" + temperature + " " + CELSIUS + "*" : "temp: "+ N_A;
             if (temperature > 0) {
                 formattedTemperature = "+" + formattedTemperature;
             }
