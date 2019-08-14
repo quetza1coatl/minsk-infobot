@@ -48,7 +48,7 @@ public class WeatherForecastHandlerImpl implements Handler {
     }
 
     @Override
-    public final String getText(Update update) {
+    public final List<String> getText(Update update) {
         String result = null;
         URL url;
         ObjectMapper mapper = new ObjectMapper();
@@ -94,7 +94,10 @@ public class WeatherForecastHandlerImpl implements Handler {
             log.error("Can't parse weather data", e);
         }
 
-        return INFO + result;
+        List<String> resultList = new ArrayList<>();
+        // This is a pretty short message, that will never exceed the size limit of message. So it hasn't to split.
+        resultList.add(INFO + result);
+        return resultList;
     }
 
     private static class Weather {

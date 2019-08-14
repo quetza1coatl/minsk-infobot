@@ -15,8 +15,8 @@ by analogy or through a change of parameters.
 ## Authorization data
 The bot uses personalized data necessary for the operation of the bot itself and part of its functions.
 This data is loaded into the application as environment variables.   
-To start the bot, you need to register your new bot via Telegram bot @FatherBot, get the name and bot token and use the
-data in the methods `MinskInfoBot#getBotUsername` and `MinskInfoBot#getBotToken` instead of an existing reference to
+To start the bot, you need to register your new bot via Telegram bot @FatherBot, get the name and bot token and use 
+data in methods `MinskInfoBot#getBotUsername` and `MinskInfoBot#getBotToken` instead of an existing reference to
  the environment variable.  
 For the weather service to work, you need to get a token at the [weather service](https://openweathermap.org/)
 and add this token to the variable `WeatherForecastHandlerImpl.WEATHER_URL` instead of an existing reference

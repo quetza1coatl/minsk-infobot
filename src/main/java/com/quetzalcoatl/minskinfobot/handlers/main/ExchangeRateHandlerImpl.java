@@ -41,7 +41,7 @@ public class ExchangeRateHandlerImpl implements Handler {
     }
 
     @Override
-    public final String getText(Update update) {
+    public final List<String> getText(Update update) {
         List<URL> urls = getURLList();
 
         if (urls.isEmpty()) {
@@ -55,11 +55,14 @@ public class ExchangeRateHandlerImpl implements Handler {
             log.error("returns null because Rates list is empty");
             return null;
         }
-        return INFO +
+        List<String> resultList = new ArrayList<>();
+        // This is a very short message, that will never exceed the size limit of message. So it hasn't to split.
+        resultList.add(INFO +
                 "_" + rates.get(0).getFormattedDate() + "_\n" +
                 (rates.stream()
                         .map(Rates::toString)
-                        .collect(Collectors.joining("\n")));
+                        .collect(Collectors.joining("\n"))));
+        return resultList;
     }
 
 

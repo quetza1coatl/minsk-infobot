@@ -46,9 +46,9 @@ public class Service {
         cacheManager.init();
     }
 
-
+    @SuppressWarnings("unchecked")
     public final void handleTextMessage(Update update) {
-        String response;
+        List<String> response;
         String userRequest = update.getMessage().getText();
         long chatId = update.getMessage().getChatId();
         Handler handler;
@@ -81,7 +81,7 @@ public class Service {
             response = handler.getText(update);
             // Caching responses from handlers and getting them from cache
         } else {
-            Cache<String, String> cache = cacheManager.getCache(handler.getAlias(), String.class, String.class);
+            Cache<String, List> cache = cacheManager.getCache(handler.getAlias(), String.class, List.class);
             if (cache.containsKey(CACHE_KEY)) {
                 response = cache.get(CACHE_KEY);
             } else {
@@ -98,7 +98,7 @@ public class Service {
             sendMsg(handler.getHandlerName() + " " + SERVICE_ERROR_MESSAGE, chatId, handler);
 
         } else {
-            sendMsg(response, chatId, handler);
+            response.forEach(it -> sendMsg(it, chatId, handler));
         }
     }
 

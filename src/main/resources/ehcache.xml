@@ -4,7 +4,7 @@
 
     <cache-template name="expiryCache">
         <key-type>java.lang.String</key-type>
-        <value-type>java.lang.String</value-type>
+        <value-type>java.util.List</value-type>
         <expiry>
             <ttl unit="minutes">10</ttl>
         </expiry>

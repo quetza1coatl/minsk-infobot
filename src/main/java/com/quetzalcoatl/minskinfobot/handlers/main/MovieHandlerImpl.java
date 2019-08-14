@@ -35,7 +35,7 @@ public class MovieHandlerImpl implements Handler {
     }
 
     @Override
-    public final String getText(Update update) {
+    public final List<String> getText(Update update) {
         Document document = null;
         try {
             document = Jsoup.connect(MOVIE_URL).get();
@@ -53,7 +53,8 @@ public class MovieHandlerImpl implements Handler {
         // Each row contains a list of films
         rows.forEach(row -> items.addAll(row.getElementsByAttributeValue("class", "lists__li ")));
 
-        return INFO + items.stream()
+        List<String> resultList = new ArrayList<>();
+        resultList.add(INFO + items.stream()
                 .limit(NUMBER_OF_MOVIE_RECORDS)
                 .map(item -> String.format("[%s](%s)%s%s",
                         // title
@@ -62,11 +63,13 @@ public class MovieHandlerImpl implements Handler {
                         item.getElementsByTag("a").first().attr("href"),
                         // description.Can be empty
                         item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text().isEmpty() ?
-                        "" : "\n" + item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text(),
+                                "" : "\n" + item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text(),
                         // raiting. Can be empty
                         item.getElementsByAttributeValue("class", "raiting hot").text().isEmpty() ?
                                 "" : "\nРейтинг: *" + item.getElementsByAttributeValue("class", "raiting hot").text()+ "*"))
-                .collect(Collectors.joining("\n\n"));
+                .collect(Collectors.joining("\n\n")));
+
+        return resultList;
     }
 
 }
