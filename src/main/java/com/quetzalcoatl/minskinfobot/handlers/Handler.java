@@ -4,8 +4,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.List;
 
 public interface Handler {
-    /** Telegram API sets max length of message to this value. Sending longer answer leads to exception.*/
-    int MAX_MESSAGE_LENGTH = 4096;
 
     /**
      * Get alias for caching.

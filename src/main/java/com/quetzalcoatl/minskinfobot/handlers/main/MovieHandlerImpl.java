@@ -1,6 +1,7 @@
 package com.quetzalcoatl.minskinfobot.handlers.main;
 
 import com.quetzalcoatl.minskinfobot.handlers.Handler;
+import com.quetzalcoatl.minskinfobot.handlers.util.HandlerUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -52,9 +53,7 @@ public class MovieHandlerImpl implements Handler {
         List<Element> items = new ArrayList<>();
         // Each row contains a list of films
         rows.forEach(row -> items.addAll(row.getElementsByAttributeValue("class", "lists__li ")));
-
-        List<String> resultList = new ArrayList<>();
-        resultList.add(INFO + items.stream()
+        List<String> movies = items.stream()
                 .limit(NUMBER_OF_MOVIE_RECORDS)
                 .map(item -> String.format("[%s](%s)%s%s",
                         // title
@@ -66,10 +65,10 @@ public class MovieHandlerImpl implements Handler {
                                 "" : "\n" + item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text(),
                         // raiting. Can be empty
                         item.getElementsByAttributeValue("class", "raiting hot").text().isEmpty() ?
-                                "" : "\nРейтинг: *" + item.getElementsByAttributeValue("class", "raiting hot").text()+ "*"))
-                .collect(Collectors.joining("\n\n")));
+                                "" : "\nРейтинг: *" + item.getElementsByAttributeValue("class", "raiting hot").text() + "*"))
+                .collect(Collectors.toList());
 
-        return resultList;
+        return HandlerUtil.splitMessages(movies, INFO);
     }
 
 }

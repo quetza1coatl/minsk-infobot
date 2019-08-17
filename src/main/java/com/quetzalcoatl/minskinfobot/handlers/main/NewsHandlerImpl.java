@@ -1,6 +1,7 @@
 package com.quetzalcoatl.minskinfobot.handlers.main;
 
 import com.quetzalcoatl.minskinfobot.handlers.Handler;
+import com.quetzalcoatl.minskinfobot.handlers.util.HandlerUtil;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
@@ -35,7 +36,7 @@ public class NewsHandlerImpl implements Handler {
 
     @Override
     public final List<String> getText(Update update) {
-        List<RssEntry> rssList = new ArrayList<>();
+        List<String> rssList = new ArrayList<>();
         try {
             // get list of rss instance
             URL feedSource = new URL(RSS_URL);
@@ -52,7 +53,7 @@ public class NewsHandlerImpl implements Handler {
                         sEntry.getLink(),
                         sEntry.getDescription() == null ? "" : sEntry.getDescription().getValue()
                 );
-                rssList.add(entry);
+                rssList.add(entry.getFormattedText());
             }
         } catch (Exception e) {
             log.error("Can't parse rss data", e);
@@ -62,35 +63,7 @@ public class NewsHandlerImpl implements Handler {
             return null;
         }
 
-        return splitMessages(rssList);
-    }
-
-    /**
-     * @return List with one entry if result message don't exceed <code>Handler.MAX_MESSAGE_LENGTH</code>, otherwise
-     * returns list with splitted messages.
-     */
-    private List<String> splitMessages(List<RssEntry> entries) {
-        List<String> result = new ArrayList<>();
-        boolean isFirstEntry = true;
-        String stringEntry = "";
-        for (RssEntry entry : entries) {
-            String entryText = entry.getFormattedText();
-            int entryLength = entryText.length();
-            if (stringEntry.length() + entryLength + 2 >= MAX_MESSAGE_LENGTH) {
-                String replacement = isFirstEntry? INFO : "";
-                stringEntry = stringEntry.replaceFirst(DOUBLE_LF, replacement);
-                isFirstEntry = false;
-                result.add(stringEntry);
-                stringEntry = String.join(DOUBLE_LF, "", entryText);
-            } else {
-                stringEntry = String.join(DOUBLE_LF, stringEntry, entryText);
-            }
-        }
-        String replacement = isFirstEntry? INFO : "";
-        stringEntry = stringEntry.replaceFirst(DOUBLE_LF, replacement);
-        result.add(stringEntry);
-
-        return result;
+        return HandlerUtil.splitMessages(rssList, INFO);
     }
 
     private static class RssEntry {
