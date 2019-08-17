@@ -13,7 +13,7 @@ public class HelpHandlerImpl implements Handler {
 
     @Override
     public final List<String> getText(Update update) {
-        String generalMessage = "*Список доступных функций:*\n\n";
+        String generalMessage = "*Список доступных сервисов.*\nСервисы доступны через встроенную клавиатуру.\n\n";
         String weatherMessage = "*--Прогноз погоды--*\n" +
                 "Погода предоставляется для города Минска с интервалом в три часа (10 записей). [Источник.](https://openweathermap.org/)" +
                 "\nРасшифровка условных обозначений:\n" +

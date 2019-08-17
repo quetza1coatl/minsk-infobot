@@ -27,11 +27,12 @@ public class Service {
     private static final String SERVICE_ERROR_MESSAGE = "временно недоступен, попробуйте позже";
     private static final String START = "/start";
     private static final String HELP = "/help";
-    private static final String EXCHANGE_RATES = "курсы валют";
-    private static final String WEATHER_FORECAST = "прогноз погоды";
-    private static final String MOVIE = "киноафиша";
-    private static final String NEWS = "новости";
+    private static final String EXCHANGE_RATES = "\uD83D\uDCB1 курсы валют";
+    private static final String WEATHER_FORECAST = "\uD83C\uDF24 прогноз погоды";
+    private static final String MOVIE = "\uD83C\uDFAC киноафиша";
+    private static final String NEWS = "\uD83D\uDCE2 новости";
     private static final String CACHE_KEY = "Cache key";
+    private static final String UNSUPPORTED_MESSAGE = "Данный тип сообщений не поддерживается.\n" + HELP + " для справки.";
 
     // Caching
     private URL cacheConfigUrl = getClass().getResource("/ehcache.xml");
@@ -127,6 +128,11 @@ public class Service {
         rowList.add(secondRow);
 
         keyboard.setKeyboard(rowList);
+    }
+
+    public void processUnsupportedMessage(Update update){
+        long chatId = update.getMessage().getChatId();
+        sendMsg(UNSUPPORTED_MESSAGE, chatId, mock -> null);
     }
 
     private void sendMsg(String answer, long chatID, Handler handler) {

@@ -24,8 +24,9 @@ public class MinskInfoBot extends TelegramLongPollingBot {
     public final void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             service.handleTextMessage(update);
+        } else {
+            service.processUnsupportedMessage(update);
         }
-        //TODO: else ... not supported?
     }
 
 }
