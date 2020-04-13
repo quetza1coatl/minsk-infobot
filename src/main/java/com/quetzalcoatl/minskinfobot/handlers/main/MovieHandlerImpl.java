@@ -37,6 +37,7 @@ public class MovieHandlerImpl implements Handler {
 
     @Override
     public final List<String> getText(Update update) {
+        final String CLASS = "class";
         Document document = null;
         try {
             document = Jsoup.connect(MOVIE_URL).get();
@@ -49,23 +50,23 @@ public class MovieHandlerImpl implements Handler {
             return null;
         }
         // Array of films are divided to rows
-        Elements rows = document.getElementsByAttributeValue("class", "b-lists list_afisha col-5");
+        Elements rows = document.getElementsByAttributeValue(CLASS, "b-lists list_afisha col-5");
         List<Element> items = new ArrayList<>();
         // Each row contains a list of films
-        rows.forEach(row -> items.addAll(row.getElementsByAttributeValue("class", "lists__li ")));
+        rows.forEach(row -> items.addAll(row.getElementsByAttributeValue(CLASS, "lists__li ")));
         List<String> movies = items.stream()
                 .limit(NUMBER_OF_MOVIE_RECORDS)
                 .map(item -> String.format("[%s](%s)%s%s",
                         // title
-                        item.getElementsByAttributeValue("class", "name").first().getElementsByTag("span").text(),
+                        item.getElementsByAttributeValue(CLASS, "name").first().getElementsByTag("span").text(),
                         // link
                         item.getElementsByTag("a").first().attr("href"),
                         // description.Can be empty
-                        item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text().isEmpty() ?
-                                "" : "\n" + item.getElementsByAttributeValue("class", "txt").first().getElementsByTag("p").text(),
+                        item.getElementsByAttributeValue(CLASS, "txt").first().getElementsByTag("p").text().isEmpty() ?
+                                "" : "\n" + item.getElementsByAttributeValue(CLASS, "txt").first().getElementsByTag("p").text(),
                         // raiting. Can be empty
-                        item.getElementsByAttributeValue("class", "raiting hot").text().isEmpty() ?
-                                "" : "\nРейтинг: *" + item.getElementsByAttributeValue("class", "raiting hot").text() + "*"))
+                        item.getElementsByAttributeValue(CLASS, "raiting hot").text().isEmpty() ?
+                                "" : "\nРейтинг: *" + item.getElementsByAttributeValue(CLASS, "raiting hot").text() + "*"))
                 .collect(Collectors.toList());
 
         return HandlerUtil.splitMessages(movies, INFO);

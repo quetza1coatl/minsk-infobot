@@ -24,7 +24,7 @@ public final class HandlerUtil {
      * @return List with one entry if result message don't exceed <code>MAX_MESSAGE_LENGTH</code>, otherwise
      * returns list with splitted messages.
      */
-    static public List<String> splitMessages(List<String> entries, String prefix) {
+    public static List<String> splitMessages(List<String> entries, String prefix) {
         List<String> result = new ArrayList<>();
         boolean isFirstEntry = true;
         String stringItem = "";

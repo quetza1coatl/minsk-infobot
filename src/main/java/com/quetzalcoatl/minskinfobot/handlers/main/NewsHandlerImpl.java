@@ -82,7 +82,7 @@ public class NewsHandlerImpl implements Handler {
             String formattedDescription = description.replaceAll("<.*?>", "")
                     .replaceAll("\\s+", " ");
 
-            return String.format("[%s](%s)\n%s", title, link, formattedDescription);
+            return String.format("[%s](%s)%n%s", title, link, formattedDescription);
         }
     }
 

@@ -67,7 +67,7 @@ public class WeatherForecastHandlerImpl implements Handler {
                 for (final JsonNode line : mainArray) {
                     //  It is possible to meet more than one weather condition. The first weather condition in API
                     // respond is primary. Variable `weatherCondition` is the first condition.
-                    JsonNode weatherCondition = line.get("weather").get(0);
+                    JsonNode weatherCondition = line.get(ALIAS).get(0);
                     // If json contains a zero value, the corresponding field of the object
                     // is filled with a Integer.MIN_VALUE, which is processed further in getFormattedText()
                     Weather weather = new Weather(
@@ -102,12 +102,12 @@ public class WeatherForecastHandlerImpl implements Handler {
 
     private static class Weather {
 
-        private static final String CELSIUS = "\u2103";
-        private static final String WIND = "\uD83C\uDF2C";
-        private static final String HUMIDITY = "\uD83D\uDCA7";
-        private static final String PRESSURE = "\u21D3";
-        private static final String CLOUDINESS = "\u2601";
-        private static final String N_A = "N/A";
+        private static final String CELSIUS_SYMBOL = "\u2103";
+        private static final String WIND_SYMBOL = "\uD83C\uDF2C";
+        private static final String HUMIDITY_SYMBOL = "\uD83D\uDCA7";
+        private static final String PRESSURE_SYMBOL = "\u21D3";
+        private static final String CLOUDINESS_SYMBOL = "\u2601";
+        private static final String NA_SYMBOL = "N/A";
 
         /**
          * Date time with a time-zone (UTC+3 for Minsk)
@@ -172,33 +172,33 @@ public class WeatherForecastHandlerImpl implements Handler {
 
             // format temperature. Null-check from Json
             String formattedTemperature =
-                    temperature != Integer.MIN_VALUE ? "*" + temperature + " " + CELSIUS + "*" : "temp: "+ N_A;
+                    temperature != Integer.MIN_VALUE ? "*" + temperature + " " + CELSIUS_SYMBOL + "*" : "temp: "+ NA_SYMBOL;
             if (temperature > 0) {
                 formattedTemperature = "+" + formattedTemperature;
             }
 
             // description. Null-check from Json. Getting data from dictionary
             String formattedDescription = "null".equals(description) ?
-                    "description: " + N_A : dictionary.getOrDefault(description, description);
+                    "description: " + NA_SYMBOL : dictionary.getOrDefault(description, description);
 
             //  cloudiness. Null-check from Json
             String formattedCloudiness =
-                    cloudiness != Integer.MIN_VALUE ? CLOUDINESS + cloudiness + "%" : CLOUDINESS + N_A;
+                    cloudiness != Integer.MIN_VALUE ? CLOUDINESS_SYMBOL + cloudiness + "%" : CLOUDINESS_SYMBOL + NA_SYMBOL;
 
             // pressure. Null-check from Json
             String formattedPressure =
-                    pressure != Integer.MIN_VALUE ? PRESSURE + pressure + " гПа" : PRESSURE + N_A;
+                    pressure != Integer.MIN_VALUE ? PRESSURE_SYMBOL + pressure + " гПа" : PRESSURE_SYMBOL + NA_SYMBOL;
 
             // humidity. Null-check from Json
             String formattedHumidity =
-                    humidity != Integer.MIN_VALUE ? HUMIDITY + humidity + "%" : HUMIDITY + N_A;
+                    humidity != Integer.MIN_VALUE ? HUMIDITY_SYMBOL + humidity + "%" : HUMIDITY_SYMBOL + NA_SYMBOL;
 
             // wind. Null-check from Json
             String formattedWind =
-                    windSpeed != Integer.MIN_VALUE ? WIND + windSpeed + " м/сек" : WIND + N_A;
+                    windSpeed != Integer.MIN_VALUE ? WIND_SYMBOL + windSpeed + " м/сек" : WIND_SYMBOL + NA_SYMBOL;
 
             return String.format(
-                    "    %s\n%s  %s %s\n%s  %s  %s  %s\n",
+                    "    %s%n%s  %s %s%n%s  %s  %s  %s%n",
                     formattedDateTime, weatherEmoji, formattedTemperature,
                     formattedDescription, formattedPressure, formattedWind, formattedHumidity, formattedCloudiness);
         }
@@ -274,15 +274,15 @@ public class WeatherForecastHandlerImpl implements Handler {
         dictionary.put("ragged shower rain", "местами ливни");
         // snow
         dictionary.put("light snow", "слабый снег");
-        dictionary.put("Snow", "снег");
-        dictionary.put("Heavy snow", "сильный снег");
-        dictionary.put("Sleet", "мокрый снег");
-        dictionary.put("Light shower sleet", "слабый мокрый снег");
-        dictionary.put("Shower sleet", "сильный мокрый снег");
-        dictionary.put("Rain and snow", "снег с дождем");
-        dictionary.put("Light shower snow", "слабый снег с дождем");
-        dictionary.put("Shower snow", "снегопад");
-        dictionary.put("Heavy shower snow", "сильный снегопад");
+        dictionary.put("snow", "снег");
+        dictionary.put("heavy snow", "сильный снег");
+        dictionary.put("sleet", "мокрый снег");
+        dictionary.put("light shower sleet", "слабый мокрый снег");
+        dictionary.put("shower sleet", "сильный мокрый снег");
+        dictionary.put("rain and snow", "снег с дождем");
+        dictionary.put("light shower snow", "слабый снег с дождем");
+        dictionary.put("shower snow", "снегопад");
+        dictionary.put("heavy shower snow", "сильный снегопад");
         // cloudiness
         dictionary.put("clear sky", "безоблачно");
         dictionary.put("few clouds", "незначительная облачность");
@@ -291,8 +291,8 @@ public class WeatherForecastHandlerImpl implements Handler {
         dictionary.put("overcast clouds", "сплошная облачность");
         //atmosphere
         dictionary.put("mist", "туман");
-        dictionary.put("Smoke", "дымка");
-        dictionary.put("Haze", "дымка");
+        dictionary.put("smoke", "дымка");
+        dictionary.put("haze", "дымка");
         dictionary.put("fog", "туман");
         dictionary.put("squalls", "шквал");
         // drizzle

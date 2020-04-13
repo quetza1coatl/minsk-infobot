@@ -1,6 +1,5 @@
 package com.quetzalcoatl.minskinfobot;
 
-import com.quetzalcoatl.minskinfobot.service.Service;
 import org.slf4j.Logger;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -10,7 +9,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public final class Main {
 
-    private static final Logger log = getLogger(Service.class);
+    private static final Logger log = getLogger(Main.class);
 
     private Main(){}
 
