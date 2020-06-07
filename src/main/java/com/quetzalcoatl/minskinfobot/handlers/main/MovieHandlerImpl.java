@@ -60,7 +60,7 @@ public class MovieHandlerImpl implements Handler {
                         // title
                         item.getElementsByAttributeValue(CLASS, "name").first().getElementsByTag("span").text(),
                         // link
-                        item.getElementsByTag("a").first().attr("href"),
+                        item.getElementsByTag("a").get(1).attr("href"),
                         // description.Can be empty
                         item.getElementsByAttributeValue(CLASS, "txt").first().getElementsByTag("p").text().isEmpty() ?
                                 "" : "\n" + item.getElementsByAttributeValue(CLASS, "txt").first().getElementsByTag("p").text(),
